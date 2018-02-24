@@ -1,0 +1,33 @@
+{
+  "name": "temp-track-electron-0.0.0",
+  "version": "0.0.0",
+  "description": "initial scaffold for electron UI interface",
+  "main": "main.js",
+  "scripts": {
+    "test": "none",
+    "start": "electron .",
+    "rebuild": "electron-rebuild -f -w sqlite3"
+  },
+  "devDependencies": {
+    "electron": "^1.8.2",
+    "electron-packager": "^5.0.1",
+    "electron-prebuilt": "^0.30.3",
+    "nedb": "^1.8.0",
+    "sqlite3": "^3.1.13"
+  },
+  "dependencies": {
+    "electron-rebuild": "^1.7.3",
+    "nconf": "^0.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "temp-track",
+    "temp",
+    "trak"
+  ],
+  "author": "abickel",
+  "license": "ISC"
+}
