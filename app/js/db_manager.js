@@ -4,15 +4,19 @@ function DbManager(){
 
     this.dataStores = [];
 
-    this.init = function(dbName){
+    this.register = function(dbName){
 
         if(!(this.dataStores[dbName])){
-            this.dataStores[dbName] = new Db();
-            return this.dataStores[dbName];
+          this.dataStores[dbName] = new Db(dbName);
+          return this.dataStores[dbName];
         }
         else 
-            return this.dataStores[dbName];
-        };
+          return this.dataStores[dbName];
+    };
+
+    this.collection = (dbName) => {
+         return this.dataStores[dbName] || null;
+    }
 };
 
 module.exports = DbManager;

@@ -1,13 +1,8 @@
-const _electron = require('electron');
-const _ipc = _electron.ipcMain;
-//const ipc = electron.ipcMain;
+global.electron = require('electron');
 
+/*UI event binding*/
 var closeEl = document.querySelector('.close');
 
 closeEl.addEventListener('click', function () {
-
-    const _electron = require('electron');
-    const _ipc = _electron.ipcRenderer;
-   debugger;
-    _ipc.sendSync('close-main-window');
+    global.electron.ipcRenderer.sendSync('close-main-window');
 });
