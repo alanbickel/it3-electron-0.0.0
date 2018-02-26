@@ -1,0 +1,71 @@
+var neDB = require('nedb');
+var errors = require('../system/errorHandler');
+
+function DbWrapper(databaseName){
+    this.db_root = "appData/";
+    this.database = null;
+  
+    this.initialize = (collectionName) => {
+      this.database = new neDB({ filename: this.db_root + collectionName +".db", autoload: true });
+      return this.database;
+    };
+
+    this.ensureIndex = function(indexObject, onCompleteCallback = null, onFailCallback = null){
+      this.database.ensureIndex(indexObject, function(error, document){
+        if(error && onFailCallback)
+          onFailCallback(error);
+         else if(!error && onCompleteCallback)
+          onCompleteCallback(document);
+      });
+    };
+
+    this.insert = (itemObject, encode = false,  onCompleteCallback = null, onFailCallback = null) => {
+      /*b64*/
+      if(encode)
+        itemObject = this.transform(itemObject, true);
+
+      this.database.insert(itemObject, function(error, document){
+        if(error && onFailCallback )
+            onFailCallback(error.message);
+          
+        else if ( !error && onCompleteCallback) 
+          onCompleteCallback(document);
+      });
+    };
+
+    this.fetch = (itemObject, isEncoded = false, onCompleteCallback = null, onFailCallback = null) => {
+        
+      if(isEncoded)
+        itemObject = this.transform(itemObject, false); 
+
+      this.database.find(itemObject, function(error, document){
+        if(error && onFailCallback )
+            onFailCallback(error.message);
+          
+        else if ( !error && onCompleteCallback) 
+          onCompleteCallback(document);
+      });
+    }
+
+    this.btoa = (string) => {
+        return Buffer.from(string).toString('base64');
+    };
+
+    this.atob = (encoded) => {
+       return Buffer.from(encoded, 'base64').toString('binary');
+    };
+
+    this.transform = (itemObj, encode) => {
+
+        for(var i in itemObj){
+            if(i !== '_id'){
+                itemObj[i] = encode ? this.btoa(itemObj[i]) : this.atob(itemObj[i]);
+            }
+        }
+        return itemObj;
+    };
+
+    this.initialize(databaseName);
+};
+
+module.exports = DbWrapper;

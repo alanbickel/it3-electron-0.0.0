@@ -1,4 +1,4 @@
-var Db = require('./systems/db.js');
+var Db = require('./db.js');
 
 function DbManager(){
 

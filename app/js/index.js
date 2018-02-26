@@ -1,3 +1,5 @@
+/*RENDERER CHANNEL*/
+
 global.electron = require('electron');
 
 /*UI event binding*/
