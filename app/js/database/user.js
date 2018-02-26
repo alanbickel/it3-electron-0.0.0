@@ -1,23 +1,23 @@
 
-var util = new (require('./util'))();
-var userDb = global.dbm.collection('users');
+var database = global.dbm.collection('users');
 
 var User = function(username, password = null){
 
     this.username = username;
-    this.userEmail = null;
+    this.email = 'testing thing';
     this.salt = null;
-    this._id = null;
-    this.uidkey = null;
+    this.password = password;
 
     this.validate = (dbResultDocument) => {
+		} 
 
-    console.log('db result: ', dbResultDocument);      
-    } 
-
-    this.verify = () => {
-      userDb.fetch ({username: this.username}, this.validate);
-    }
+		this.validationFailure = (errorType) => {
+		};
+		
+		this.exists = () => {
+			//see if this user exists
+			database.fetch ({username: this.username}, (document)=>{console.log('response document', document)}, (error)=>{console.log('db error', error)});
+		};
 
     this.generateSalt = () => {
       var saltLength = 16;
@@ -25,12 +25,35 @@ var User = function(username, password = null){
       var saltString = "";
 
       while(saltString.length < saltLength){
-        var index = util.randIntInRange(0, charString.length -1);
+        var index = global.Util.randIntInRange(0, charString.length -1);
         saltString = saltString + charString[index];
       }
       this.salt = saltString;
-    };
+		};
+		
 
+
+		this.onSaveSuccess = (dbresponse) => {
+			global.debug.print('successful save ',dbresponse);
+		}
+		this.onSaveFail = (error) => {
+			global.debug.print('save fail ',error);
+		}
+		
+		this.save = () =>{
+
+			this.salt = this.generateSalt();
+			this.password = global.Util.crypt(this.password, this.salt);
+
+			var storageObj = {
+				username: this.username,
+				uidkey : this.password,
+				salt: this.salt,
+				email : this.email
+			}
+
+			database.insert(storageObj, true,this.onSaveSuccess, this.onSaveFail);
+		}
 };
 
 

@@ -1,6 +1,6 @@
-var SHA256 = require("crypto-js/sha256");
+var Util = (function(){
 
-var Util = function(){
+	var SHA256 = require("crypto-js/sha256");
 
   this. randIntInRange = (min, max) => {
     min = Math.ceil(min);
@@ -12,7 +12,7 @@ var Util = function(){
     return SHA256(input + key);
   }
   
-};
+});
 
 
 module.exports = Util;

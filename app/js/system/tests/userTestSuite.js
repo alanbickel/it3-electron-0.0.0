@@ -1,41 +1,37 @@
 
 var debug = require('../debug');
+var User = require('../../database/user');
+var UserTest = function(){
 
-var UserTest = function(debuggingIsOn = false){
 
-  this._dbManager = global.databaseManager;
-  this._debugger = new debug(debuggingIsOn);
+	global.DEBUG.print('-----', 'entering user test suite', '------');
+
+	this.selectedDB = global.dbm.collection('users');
 
   this.testUserData = {
     username : 'test user',
     userEmail : 'email address',
-    salt : '1234567890',
     accessLevel: 5,
     _id : null,
     uidkey : 'moomoomoo'
   };
 
-  this.selectDatabase = () => {
-    this.selectedDB = this._dbManager.db('users');
-  };
-
    this.getAllUsers = () => {
-
-     this.selectDatabase();
-
-    return this.selectedDB.distinct('username');
    };
 
    this.addUser = () => {
 
-     this.selectDatabase();
-     this.selectedDB.insert(this.testUserData, true, this._debug.print);
+		var newUser = new User('alanbickel');
+    newUser.exists();
+	 };
+	 
 
+	 this.saveNewUser = () => {
 
-   };
+		var newUser = new User('alanbickel', '123abc');
 
-   this.selectDatabase();
+		newUser.save();
+	 }
 };
-
 
 module.exports = UserTest;

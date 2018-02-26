@@ -16,9 +16,8 @@ var ItemTest = function () {
     cat: "category 1"
   };
 
-  this.onFailureCallback = (message) => {
-    global.DEBUG.print('onFailCallback: ');
-    global.DEBUG.print(message);
+  this.onFailureCallback = (failureType) => {
+    global.DEBUG.print('onFailCallback() error type -> ', failureType );
   };
 
   this.encodeNewData =true;

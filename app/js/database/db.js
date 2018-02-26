@@ -15,7 +15,7 @@ function DbWrapper(databaseName){
         if(error && onFailCallback)
           onFailCallback(error);
          else if(!error && onCompleteCallback)
-          onCompleteCallback(document);
+					onCompleteCallback(indexObject);
       });
     };
 
@@ -24,11 +24,11 @@ function DbWrapper(databaseName){
       if(encode)
         itemObject = this.transform(itemObject, true);
 
-      this.database.insert(itemObject, function(error, document){
-        if(error && onFailCallback )
-            onFailCallback(error.message);
+      this.database.insert(itemObject, function(e, document){
+        if(e && onFailCallback )
+            onFailCallback(e.errorType);
           
-        else if ( !error && onCompleteCallback) 
+        else if ( !e && onCompleteCallback) 
           onCompleteCallback(document);
       });
     };
@@ -38,11 +38,11 @@ function DbWrapper(databaseName){
       if(isEncoded)
         itemObject = this.transform(itemObject, false); 
 
-      this.database.find(itemObject, function(error, document){
-        if(error && onFailCallback )
-            onFailCallback(error.message);
+      this.database.find(itemObject, function(e, document){
+        if(e && onFailCallback )
+            onFailCallback(e.errorType);
           
-        else if ( !error && onCompleteCallback) 
+        else if ( !e && onCompleteCallback) 
           onCompleteCallback(document);
       });
     }
