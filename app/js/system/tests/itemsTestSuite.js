@@ -37,11 +37,11 @@ var ItemTest = function () {
   this.findItem = () => {
     this.debugger.print('calling findItem()');
     
-    var onCompleteCalllback = (dbResponse) => {
+    this.onCompleteCalllback = (dbResponse) => {
       this.debugger.print('findItem() complete');
       this.debugger.print('database response:', dbResponse);
     };
-    this.selectedDB.fetch(this.testItem, this.retrieveEncodedData, onCompleteCalllback, this.onFailureCallback);
+    this.selectedDB.fetchEncodedKey(this.testItem, this.onCompleteCalllback, this.onFailureCallback);
   };
 
   this.runAll = () => {

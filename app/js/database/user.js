@@ -1,13 +1,15 @@
 
 var database = global.dbm.collection('users');
 
-var User = function(username, password = null){
+var User = function(username){
 
     this.username = username;
     this.email = 'testing thing';
     this.salt = null;
-    this.password = password;
-
+		this.password = null;
+		this.pwdordEncrypted = false;
+		this.hasSalt = false;
+	
     this.validate = (dbResultDocument) => {
 		} 
 
@@ -16,7 +18,7 @@ var User = function(username, password = null){
 		
 		this.exists = () => {
 			//see if this user exists
-			database.fetch ({username: this.username}, (document)=>{console.log('response document', document)}, (error)=>{console.log('db error', error)});
+			database.fetchEncodedKey ({username: this.username},  (document)=>{console.log('response document', document)}, (error)=>{console.log('db error', error)});
 		};
 
     this.generateSalt = () => {
@@ -28,23 +30,32 @@ var User = function(username, password = null){
         var index = global.Util.randIntInRange(0, charString.length -1);
         saltString = saltString + charString[index];
       }
-      this.salt = saltString;
+			this.salt = saltString;
+			this.hasSalt = true;
 		};
 		
-
-
 		this.onSaveSuccess = (dbresponse) => {
-			global.debug.print('successful save ',dbresponse);
+			global.DEBUG.print('successful save ',dbresponse);
 		}
 		this.onSaveFail = (error) => {
-			global.debug.print('save fail ',error);
+			global.DEBUG.print('save fail ',error);
 		}
+
+		this.password = (password) => {
+
+			this.password = global.Util.crypt(this.password, this.salt);
+			this.pwdordEncrypted = true;
+		}
+
+		
 		
 		this.save = () =>{
 
-			this.salt = this.generateSalt();
-			this.password = global.Util.crypt(this.password, this.salt);
-
+			if(!this.pwdordEncrypted || ! this.hasSalt){
+				throw new global.Error('PASSWORD AND SALT MUST BE SET BEFORE SAVING');
+				return;
+			}
+			
 			var storageObj = {
 				username: this.username,
 				uidkey : this.password,
@@ -52,7 +63,9 @@ var User = function(username, password = null){
 				email : this.email
 			}
 
-			database.insert(storageObj, true,this.onSaveSuccess, this.onSaveFail);
+			console.log(storageObj);
+
+			database.insert(storageObj, true, this.onSaveSuccess, this.onSaveFail);
 		}
 };
 

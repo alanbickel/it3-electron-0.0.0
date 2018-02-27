@@ -38,13 +38,13 @@ app.on('ready', function(){
     global.dbm.register('items');
     //configure document constraint 
     global.dbm.collection('items').ensureIndex({fieldName: 'label', unique: true}, (response)=>{
-			global.DEBUG.print('ensure index success', response, "-----");
+			global.DEBUG.print('ensure index success Items', response, "-----");
 		});
     //initialize users database
     global.dbm.register('users');
     //configure document constraint 
     global.dbm.collection('users').ensureIndex({fieldName: 'username', unique: true}, (response)=>{
-			global.DEBUG.print('ensure index success', response, "-----");
+			global.DEBUG.print('ensure index success Users', response, "-----");
 		} );
 
     /*DATABASE TESTING*/
@@ -54,12 +54,14 @@ app.on('ready', function(){
 
 			//item tests
       global.DEBUG.print('debug state detected, running test suites');
-      var _dbTests = new ItemTest();
-			_dbTests.runAll();
+			var _dbTests = new ItemTest();
+			_dbTests.findItem();
+			//_dbTests.runAll();
 			//user tests
 			var userTest = new UserTest();
-			userTest.addUser();
-			userTest.saveNewUser();
+			//userTest.addUser();
+			//userTest.saveNewUser();
+			userTest.retrieveUser();
     }
     
 });

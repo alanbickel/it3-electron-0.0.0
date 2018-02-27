@@ -33,19 +33,32 @@ function DbWrapper(databaseName){
       });
     };
 
-    this.fetch = (itemObject, isEncoded = false, onCompleteCallback = null, onFailCallback = null) => {
+    this.fetch = (itemObject, onCompleteCallback = null, onFailCallback = null) => {
         
-      if(isEncoded)
-        itemObject = this.transform(itemObject, false); 
-
       this.database.find(itemObject, function(e, document){
+        if(e && onFailCallback )
+            onFailCallback(e.errorType); 
+        else if ( !e && onCompleteCallback){
+					onCompleteCallback(document);
+				} 
+      });
+		}
+		
+		this.fetchEncodedKey = (plaintextObject, onCompleteCallback, onFailCallback) => {
+			
+			var itemObject = this.transform(plaintextObject, true); 
+
+			console.log('preparing', itemObject);
+
+			this.database.find(itemObject, function(e, document){
         if(e && onFailCallback )
             onFailCallback(e.errorType);
           
-        else if ( !e && onCompleteCallback) 
-          onCompleteCallback(document);
+        else if ( !e && onCompleteCallback){
+					onCompleteCallback(document);
+				} 
       });
-    }
+		}
 
     this.btoa = (string) => {
         return Buffer.from(string).toString('base64');

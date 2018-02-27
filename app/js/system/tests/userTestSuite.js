@@ -22,15 +22,24 @@ var UserTest = function(){
    this.addUser = () => {
 
 		var newUser = new User('alanbickel');
-    newUser.exists();
+   // newUser.exists();
 	 };
 	 
 
 	 this.saveNewUser = () => {
 
 		var newUser = new User('alanbickel', '123abc');
-
+		newUser.generateSalt();
+		newUser.password('moomoomoo');
 		newUser.save();
+	 }
+
+	 this.retrieveUser = () => {
+
+		var r_user =  new User('alanbickel');
+
+		r_user.exists();
+
 	 }
 };
 

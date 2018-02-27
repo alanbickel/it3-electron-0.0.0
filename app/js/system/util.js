@@ -9,10 +9,8 @@ var Util = (function(){
   }
 
   this.crypt = (input, key) => {
-    return SHA256(input + key);
+		return SHA256(input + key).toString();
   }
-  
 });
-
 
 module.exports = Util;
