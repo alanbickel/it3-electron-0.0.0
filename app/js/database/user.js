@@ -16,9 +16,15 @@ var User = function(username){
 		this.validationFailure = (errorType) => {
 		};
 		
-		this.exists = () => {
-			//see if this user exists
-			database.fetchEncodedKey ({username: this.username},  (document)=>{console.log('response document', document)}, (error)=>{console.log('db error', error)});
+		this.exists = (onCompleteCallback, onFailCallback) => {
+
+			database.fetchEncodedKey ({username: this.username},  (e, document) => {
+         if(e && onFailCallback )
+            onFailCallback(e);
+          
+        else if ( !e && onCompleteCallback) 
+          onCompleteCallback(document);
+      });
 		};
 
     this.generateSalt = () => {

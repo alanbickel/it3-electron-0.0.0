@@ -60,6 +60,13 @@ function DbWrapper(databaseName){
       });
 		}
 
+    this.fetchAll = (successCallback, failureCallback) => {
+      this.database.find({}, (e, document) => {
+
+        successCallback(document);
+      });
+    };
+
     this.btoa = (string) => {
         return Buffer.from(string).toString('base64');
     };

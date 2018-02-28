@@ -25,10 +25,10 @@ global.Util = new util();
 app.on('ready', function(){
 
     mainWindow = new BrowserWindow({
-        frame: global.DEBUG.isOn() ? true : false,
-        height: 700,
+        frame: global.DEBUG.isOn() ? false : false,
+        height: 600,
         resizable: global.DEBUG.isOn() ? true : false,
-        width: 368
+        width: 600
     });
     mainWindow.loadURL('file://' + __dirname + '/app/index.html');
 
@@ -54,16 +54,20 @@ app.on('ready', function(){
 
 			//item tests
       global.DEBUG.print('debug state detected, running test suites');
-			var _dbTests = new ItemTest();
-			_dbTests.findItem();
-			//_dbTests.runAll();
+		//	var _dbTests = new ItemTest();
+		//	_dbTests.runAll();
 			//user tests
 			var userTest = new UserTest();
-			//userTest.addUser();
-			//userTest.saveNewUser();
-			userTest.retrieveUser();
+			//userTest.retrieveUser();
+      //userTest.confirmPassword();
+      //userTest.retrieveUsers();
+      userTest.userIsExisting();
     }
     
+    //listen for events from renderer process
+    ipc.on('passing', (event, args)=>{
+      console.log(args);
+    })
 });
 
 ipc.on('close-main-window', function () {

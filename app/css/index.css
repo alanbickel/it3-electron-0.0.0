@@ -1,0 +1,17 @@
+#menu{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+  border-bottom: 1px solid black;
+}
+
+.menu-button{
+  cursor: pointer;
+  border: 1px solid grey;
+  border-radius: 5px;
+  min-width: 50px;
+  text-transform: uppercase;
+  padding: 8px;
+  
+}
