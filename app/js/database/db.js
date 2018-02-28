@@ -17,7 +17,18 @@ function Database(databaseName){
          else if(!error && onCompleteCallback)
 					onCompleteCallback(indexObject);
       });
-    };
+		};
+		
+		this.transform = (itemObj, encode) => {
+
+			for(var i in itemObj){
+					if(i !== '_id' && i !== 'uidkey'){
+						if(itemObj[i])
+							itemObj[i] = encode ? this.btoa(itemObj[i]) : this.atob(itemObj[i]);
+					}
+			}
+			return itemObj;
+	};
 
     this.insert = (itemObject, encode = false,  onCompleteCallback = null, onFailCallback = null) => {
       /*b64*/
@@ -49,13 +60,21 @@ function Database(databaseName){
 			
 			var itemObject = this.transform(plaintextObject, true); 
 
+			var pointer = this;
+
 			this.database.find(itemObject, function(e, document){
         if(e && onFailCallback )
           onFailCallback(e.errorType);
           
-        else if ( !e && onCompleteCallback)
-        //decode and return object to caller
-					onCompleteCallback(this.transform(document, false));
+        else if ( !e && onCompleteCallback){
+					//decode and return object to caller
+					if(!document.length > 0){
+						onFailCallback('document empty');
+					return;
+					}
+					onCompleteCallback(pointer.transform(document[0], false));
+				}
+        
       });
 		}
 
@@ -78,14 +97,7 @@ function Database(databaseName){
        return Buffer.from(encoded, 'base64').toString('binary');
     };
 
-    this.transform = (itemObj, encode) => {
-        for(var i in itemObj){
-            if(i !== '_id'){
-                itemObj[i] = encode ? this.btoa(itemObj[i]) : this.atob(itemObj[i]);
-            }
-        }
-        return itemObj;
-    };
+
     this.initialize(databaseName);
 };
 

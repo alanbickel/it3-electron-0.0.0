@@ -1,6 +1,6 @@
-var User = function(){
+var User = function(name, isNewUser = false){
 
-  this._userName = null;
+  this._userName = name;
   this.userEmail = null;
   this.userSalt = null;
 	this.encryptedPassword = null;
@@ -22,7 +22,7 @@ var User = function(){
       return this._userName;
   };
 
-  this.salt = (_salt = null) => {
+  this.setSalt = (_salt = null) => {
 
     if(_salt){
       this.userSalt = _salt;
@@ -40,7 +40,11 @@ var User = function(){
     }
 		this.userSalt = saltString;
 		this.hasSalt = true;
-  };
+	};
+	
+	this.getSalt = () => {
+		return this.userSalt;
+	};
 
   this.password = (encryptedString = null) => {
     if(encryptedString){
@@ -58,7 +62,20 @@ var User = function(){
       this.systemAccessLevel = level;
     else
       return this.systemAccessLevel;
-  };
+	};
+	
+	this.export = () => {
+		return {
+			username : this._userName,
+			uidkey : this.encryptedPassword,
+			salt : this.userSalt,
+			email : this.userEmail
+		}
+	}
+
+
+	if(isNewUser)
+		this.setSalt();
 };
 
 module.exports = User;

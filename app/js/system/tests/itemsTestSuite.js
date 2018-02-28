@@ -20,7 +20,7 @@ var ItemTest = function () {
     global.DEBUG.print('onFailCallback() error type -> ', failureType );
   };
 
-  this.encodeNewData =true;
+  this.encodeNewData = true;
   this.retrieveEncodedData = true;
 
   this.createItem = () => {

@@ -1,4 +1,4 @@
 determine whether to encode new items when entering into item database?  
 	is this necessary? 
 
-user teszt needs authentications comparison.
+consider moving encrypt function to User Interface.
