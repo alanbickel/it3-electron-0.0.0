@@ -11,7 +11,7 @@ var main = remote.require("./main.js");
 var closeEl = document.querySelector('#exit-button');
 var username = document.querySelector('#username');
 var password = document.querySelector('#pwd');
-var submitbtn = document.querySelector('#loginsubmit');
+var submitBtn = document.querySelector('#loginsubmit');
 var output = document.querySelector('.output');
 
 closeEl.addEventListener('click', function () {
@@ -23,7 +23,10 @@ username.addEventListener('keyup', function(e){
 });
 
 submitBtn.addEventListener('click', function (e) {
+  debugger;
+  //collect credentials
+  var login = {username: username.value, pw: password.value}
 
-  ipcRenderer.send('passing', e.target.value);
+  ipcRenderer.send('loginAttempt', login);
     //global.electron.ipcRenderer.sendSync('close-main-window');
 });

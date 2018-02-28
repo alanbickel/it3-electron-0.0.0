@@ -1,7 +1,7 @@
 var neDB = require('nedb');
 var errors = require('../system/errorHandler');
 
-function DbWrapper(databaseName){
+function Database(databaseName){
     this.db_root = "appData/";
     this.database = null;
   
@@ -36,34 +36,37 @@ function DbWrapper(databaseName){
     this.fetch = (itemObject, onCompleteCallback = null, onFailCallback = null) => {
         
       this.database.find(itemObject, function(e, document){
-        if(e && onFailCallback )
-            onFailCallback(e.errorType); 
-        else if ( !e && onCompleteCallback){
-					onCompleteCallback(document);
-				} 
+
+        if(e && onFailCallback ) 
+          onFailCallback(e); 
+
+        else if ( !e && onCompleteCallback) 
+          onCompleteCallback(document);
       });
-		}
+		};
 		
 		this.fetchEncodedKey = (plaintextObject, onCompleteCallback, onFailCallback) => {
 			
 			var itemObject = this.transform(plaintextObject, true); 
 
-			console.log('preparing', itemObject);
-
 			this.database.find(itemObject, function(e, document){
         if(e && onFailCallback )
-            onFailCallback(e.errorType);
+          onFailCallback(e.errorType);
           
-        else if ( !e && onCompleteCallback){
-					onCompleteCallback(document);
-				} 
+        else if ( !e && onCompleteCallback)
+        //decode and return object to caller
+					onCompleteCallback(this.transform(document, false));
       });
 		}
 
     this.fetchAll = (successCallback, failureCallback) => {
       this.database.find({}, (e, document) => {
 
-        successCallback(document);
+        if(e && onFailCallback )
+          onFailCallback(e.errorType);
+          
+        else if ( !e && onCompleteCallback)
+					onCompleteCallback(document);
       });
     };
 
@@ -76,7 +79,6 @@ function DbWrapper(databaseName){
     };
 
     this.transform = (itemObj, encode) => {
-
         for(var i in itemObj){
             if(i !== '_id'){
                 itemObj[i] = encode ? this.btoa(itemObj[i]) : this.atob(itemObj[i]);
@@ -84,8 +86,7 @@ function DbWrapper(databaseName){
         }
         return itemObj;
     };
-
     this.initialize(databaseName);
 };
 
-module.exports = DbWrapper;
+module.exports = Database;

@@ -8,6 +8,7 @@ var databaseManager = null;
 var debug = require('./app/js/system/debug');
 var util = require('./app/js/system/util');
 
+
 /************
   **GLOBALS**
 *************/
@@ -24,6 +25,19 @@ global.Util = new util();
 
 app.on('ready', function(){
 
+  /*initialization */
+  //initialize database manager
+  global.dbm = new DbManager();
+  //initialize items database
+  global.dbm.register('items');
+   //initialize users database
+  global.dbm.register('users');
+
+  var janky = global.dbm.collection('users');
+
+  var User = require('./app/js/entity/user');
+  var UI = require('./app/js/model/userInterface');
+
     mainWindow = new BrowserWindow({
         frame: global.DEBUG.isOn() ? false : false,
         height: 600,
@@ -32,16 +46,12 @@ app.on('ready', function(){
     });
     mainWindow.loadURL('file://' + __dirname + '/app/index.html');
 
-    //initialize database manager
-    global.dbm = new DbManager();
-    //initialize items database
-    global.dbm.register('items');
+    
     //configure document constraint 
     global.dbm.collection('items').ensureIndex({fieldName: 'label', unique: true}, (response)=>{
 			global.DEBUG.print('ensure index success Items', response, "-----");
 		});
-    //initialize users database
-    global.dbm.register('users');
+   
     //configure document constraint 
     global.dbm.collection('users').ensureIndex({fieldName: 'username', unique: true}, (response)=>{
 			global.DEBUG.print('ensure index success Users', response, "-----");
@@ -49,24 +59,17 @@ app.on('ready', function(){
 
     /*DATABASE TESTING*/
     if(global.DEBUG.ENABLED){
-			var ItemTest = require('./app/js/system/tests/itemsTestSuite');
-			var UserTest = require('./app/js/system/tests/userTestSuite');
-
-			//item tests
-      global.DEBUG.print('debug state detected, running test suites');
-		//	var _dbTests = new ItemTest();
-		//	_dbTests.runAll();
-			//user tests
-			var userTest = new UserTest();
-			//userTest.retrieveUser();
-      //userTest.confirmPassword();
-      //userTest.retrieveUsers();
-      userTest.userIsExisting();
+		//TESTS
     }
     
     //listen for events from renderer process
-    ipc.on('passing', (event, args)=>{
-      console.log(args);
+    ipc.on('loginAttempt', (event, input)=>{
+      var user = new User(input.username); 
+
+      var ui  = new UI(user, input.pw, janky);
+
+      ui.isValidUser(()=>{console.log('success')}, ()=>{console.log('failure')});
+
     })
 });
 
