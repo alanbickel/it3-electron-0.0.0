@@ -1,2 +1,2 @@
-{"$$indexCreated":{"fieldName":"username","unique":true,"sparse":false}}
 {"username":"YWJpY2tlbEBsYXJzb250ZXh0cy5jb20=","uidkey":"c486151d0fb97d08b5318114604223ad1dd13bfb63c2975a70f9beed91b7bb50","salt":"b2VlZU1mZDNQVEhtdnZDZQ==","email":null,"_id":"CFtlLngChEQ4rTlK"}
+{"$$indexCreated":{"fieldName":"username","unique":true,"sparse":false}}
