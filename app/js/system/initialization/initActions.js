@@ -1,14 +1,15 @@
 
-global.electron = require('electron');
 var {ipcRenderer, remote} = require('electron');  
 
 
 var testElement = document.getElementById('load-display');
 
-console.log(testElement);
+ipcRenderer.on('ping', function(evt, data) {
+	testElement.innerHTML = "ping received";
+  ipcRenderer.send('init-is-ready', '1');
+});
 
-
-ipcRenderer.on('animal', function(evt, data) {
+ipcRenderer.on('do-it', function(evt, data) {
 	console.log('received!');
-	testElement.innerHTML = "Hi!";
+	testElement.innerHTML = "do-it";
 });

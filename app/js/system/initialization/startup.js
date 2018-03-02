@@ -5,7 +5,7 @@ function StartupRoutine (parent){
 		
 		this.promprForAdminCreation = (dbError)=> {
 			if(dbError == "document empty"){
-				parent.promprForAdminCreation();
+				parent.promptForAdminCreation();
 			}
 		}
 

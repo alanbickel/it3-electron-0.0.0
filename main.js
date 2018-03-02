@@ -1,9 +1,9 @@
 /**application dependencies */
 var electron = require('electron');
-var {app, BrowserWindow, remote} = electron;
+var {app, BrowserWindow} = electron;
 var ipc = electron.ipcMain;
 var mainWindow = null;
-var initWindow = null;
+var splashWindow = null;
 
 /*Utilities */
 var DbManager = require('./app/js/database/dbManager');
@@ -15,19 +15,17 @@ var User = require('./app/js/entity/user');
 var UI = require('./app/js/model/userInterface');
 var startupRoutine = require('./app/js/system/initialization/startup');
 
-
 /*INITIALIZATION */
 app.on('ready', function(){
-	
-	this.splashWindow = new BrowserWindow({
+	splashWindow = new BrowserWindow({
 		frame: false,
 		width: 600, 
 		height: 600
 	});
 
-	this.splashWindow.loadURL('file://' + __dirname + '/app/pages/init.html');
-	this.splashWindow.once('ready-to-show', ()=>{
-		this.splashWindow.show();
+	splashWindow.loadURL('file://' + __dirname + '/app/pages/init.html');
+	splashWindow.once('ready-to-show', ()=>{
+	    splashWindow.show();
 	});
 
 	/**define global resources */
@@ -51,6 +49,13 @@ app.on('ready', function(){
 	this.DbManager.collection('users').ensureIndex({fieldName: 'username', unique: true}, (response)=>{
 		global.DEBUG.print('ensure index success Users', response, "-----");
 	} );
+
+  app.promptForAdminCreation = () => {
+
+    this.adminCreationKey = Util.randomKey();
+    console.log(this.adminCreationKey);
+    //this.splashWindow.webContents.send('do-it', 'message');
+  };
 
 	var startup = new startupRoutine(this);
 
@@ -79,13 +84,11 @@ app.on('ready', function(){
     //  ui.isValidUser(()=>{console.log('success')}, ()=>{console.log('failure')});
 //
     //})
+
+
 });
 
-/*Initialization Actions*/
-app.promprForAdminCreation = function(){
-	console.log('swc: ', this.splashWindow.webContents);
-	console.log(app.splashWindow.webContents.send('animal', 'moo!'));
-}
+
 
 /**terminate */
 ipc.on('close-main-window', function () {

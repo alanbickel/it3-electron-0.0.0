@@ -2,3 +2,8 @@ determine whether to encode new items when entering into item database?
 	is this necessary? 
 
 consider moving encrypt function to User Interface.
+gather initialization reqs, in startup routine, 
+fire events into new window (create admin, etc...)
+generate new browserwindow for each interaction triggered by async action?
+
+
