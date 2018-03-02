@@ -53,8 +53,8 @@ app.on('ready', function(){
   app.promptForAdminCreation = () => {
 
     this.adminCreationKey = Util.randomKey();
-    console.log(this.adminCreationKey);
-    //this.splashWindow.webContents.send('do-it', 'message');
+
+    this.splashWindow.webContents.send('do-it', 'message');
   };
 
 	var startup = new startupRoutine(this);
@@ -85,7 +85,12 @@ app.on('ready', function(){
 //
     //})
 
-
+/*
+  TRY THIS!
+      ui.isValidUser(()=>{
+        event.sender.send('SUCCESS', 'SuCcEsS');
+      }, ()=>{console.log('failure')});
+*/
 });
 
 
