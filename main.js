@@ -1,102 +1,88 @@
-/**application dependencies */
+/**system dependencies */
 var electron = require('electron');
-var {app, BrowserWindow} = electron;
+var {app, BrowserWindow, dialog} = electron;
 var ipc = electron.ipcMain;
-var mainWindow = null;
-var splashWindow = null;
+var _app = null;
 
-/*Utilities */
+/*appp dependencies */
 var DbManager = require('./app/js/database/dbManager');
 var debug = require('./app/js/system/debug');
 var util = require('./app/js/system/util');
-
-/*data structs */
-var User = require('./app/js/entity/user');
-var UI = require('./app/js/model/userInterface');
 var startupRoutine = require('./app/js/system/initialization/startup');
 
-/*INITIALIZATION */
+/*objects and interfaces */
+var User = require('./app/js/entity/user');
+var UI = require('./app/js/model/userInterface');
+var InitEventListener = require('./app/js/system/eventListeners/initListener');
+
+/**define global resources */
+global.Util = new util();
+//toggle debug output/conditions
+global.DEBUG = new debug(true);
+//error handling
+
 app.on('ready', function(){
+
+  //list of windows
+  this.browserWindows = [];
+  this.dialog = dialog;
+  //manage databases
+  this.DbManager = new DbManager();
+  //initialization routines
+  this.startupRoutine = new startupRoutine(this);
+  /**event listener for init window */
+  var initListener =  new InitEventListener(this, ipc);
+
+  /*define init window*/
 	splashWindow = new BrowserWindow({
 		frame: false,
 		width: 600, 
 		height: 600
 	});
-
-	splashWindow.loadURL('file://' + __dirname + '/app/pages/init.html');
-	splashWindow.once('ready-to-show', ()=>{
-	    splashWindow.show();
+  /*define main window */
+  mainWindow = new BrowserWindow({
+		frame: global.DEBUG.isOn() ? false : false,
+		height: 600,
+		resizable: global.DEBUG.isOn() ? true : false,
+		width: 600
 	});
+  mainWindow.hide();
 
-	/**define global resources */
-	global.Util = new util();
-	//toggle debug output/conditions
-	global.DEBUG = new debug(true);
-	//error handling
-	global.Error = require('./app/js/system/errorHandler');
+  splashWindow.loadURL('file://' + __dirname + '/app/pages/init.html');
+	splashWindow.once('ready-to-show', ()=>{splashWindow.show()});
+  
+  this.browserWindows.push({key: "splashWindow", window: splashWindow});
+  this.browserWindows.push({key: "mainWindow", window: mainWindow});
 
-  //initialize database manager
-	this.DbManager = new DbManager();
-  //initialize items database
-  this.DbManager.register('items');
-  //initialize users database
-	this.DbManager.register('users');
-	//configure document constraint  for items database
-	this.DbManager.collection('items').ensureIndex({fieldName: 'label', unique: true}, (response)=>{
-		global.DEBUG.print('ensure index success Items', response, "-----");
-	});
-	//configure document constraint  for users database
-	this.DbManager.collection('users').ensureIndex({fieldName: 'username', unique: true}, (response)=>{
-		global.DEBUG.print('ensure index success Users', response, "-----");
-	} );
 
-  app.promptForAdminCreation = () => {
-
-    this.adminCreationKey = Util.randomKey();
-
-    this.splashWindow.webContents.send('do-it', 'message');
+  this.adminExists = () => {
+  /*admin user exists, load main process*/
+  
+	  mainWindow.loadURL('file://' + __dirname + '/app/pages/index.html');
+	  mainWindow.once('ready-to-show', ()=>{
+		  splashWindow.close();
+		  mainWindow.show();
+	  });
   };
 
-	var startup = new startupRoutine(this);
+  /*create new admin-level user*/
+  this.createAdminUser = (userData) => {
+    console.log('aww fuck yeah! ', userData);
+  };
 
-	
-	/**mock load time, until init measurements are implemented */
-	//setTimeout(()=>{
-	//	/**main app window initialization */
-	//	mainWindow = new BrowserWindow({
-	//		frame: global.DEBUG.isOn() ? false : false,
-	//		height: 600,
-	//		resizable: global.DEBUG.isOn() ? true : false,
-	//		width: 600
-	//	});
-	//	mainWindow.loadURL('file://' + __dirname + '/app/pages/index.html');
-	//	mainWindow.once('ready-to-show', ()=>{
-	//		splashWindow.close();
-	//		mainWindow.show();
-	//});
-	//}, 3000);
-	
-    //listen for events from renderer process
-    //ipc.on('loginAttempt', (event, input) => {
-		//	var user = new User(input.username); 
-		//	var ui  = new UI(user, input.pw, DbManager.collection('users'));
-		//	
-    //  ui.isValidUser(()=>{console.log('success')}, ()=>{console.log('failure')});
-//
-    //})
+  /*push msg to init window, show admin creation form - unique key to prevent will-nilly admin creation*/
+  this.promptForAdminCreation = () => {
+    this.adminCreationKey = Util.randomKey();
+    splashWindow.webContents.send('admin-required', {key:this.adminCreationKey });
+  };
 
-/*
-  TRY THIS!
-      ui.isValidUser(()=>{
-        event.sender.send('SUCCESS', 'SuCcEsS');
-      }, ()=>{console.log('failure')});
-*/
+  /*startup routine callback functions*/
+  this.dbInitializeSuccess = () =>{
+    process.stdout.write('collections initialized successfully');
+  } 
+
+  this.dbInitializeFailure = (dbResponse)=>{
+    /*TODO !  need to deal with db failure*/
+    process.stdout.write('database failure', dbResponse);
+  }
 });
-
-
-
-/**terminate */
-ipc.on('close-main-window', function () {
-    app.quit();
-});
-

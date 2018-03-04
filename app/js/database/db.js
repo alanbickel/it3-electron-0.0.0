@@ -3,10 +3,12 @@ var errors = require('../system/errorHandler');
 
 function Database(databaseName){
     this.db_root = "appData/";
+    this.isInitialized = false;
     this.database = null;
   
     this.initialize = (collectionName) => {
       this.database = new neDB({ filename: this.db_root + collectionName +".db", autoload: true });
+      this.isInitialized = true;
       return this.database;
     };
 
