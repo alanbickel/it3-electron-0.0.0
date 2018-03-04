@@ -14,6 +14,7 @@ var startupRoutine = require('./app/js/system/initialization/startup');
 var User = require('./app/js/entity/user');
 var UI = require('./app/js/model/userInterface');
 var InitEventListener = require('./app/js/system/eventListeners/initListener');
+var MainWinEvtListener = require('./app/js/system/eventListeners/mainWinListener');
 
 /**define global resources */
 global.Util = new util();
@@ -24,7 +25,8 @@ global.DEBUG = new debug(true);
 app.on('ready', function(){
 
   //list of windows
-  this.browserWindows = [];
+  this.splashWindow = null;
+  this.mainWindow = null;
   this.dialog = dialog;
   //manage databases
   this.DbManager = new DbManager();
@@ -32,46 +34,67 @@ app.on('ready', function(){
   this.startupRoutine = new startupRoutine(this);
   /**event listener for init window */
   var initListener =  new InitEventListener(this, ipc);
+  //event listener for main window
+  var mainWindowListener = new MainWinEvtListener(this, ipc);
 
   /*define init window*/
-	splashWindow = new BrowserWindow({
+	this.splashWindow = new BrowserWindow({
 		frame: false,
 		width: 600, 
-		height: 600
+		height: 600, webPreferences: {
+      devTools: global.DEBUG.isOn() ? true : false
+    }
 	});
   /*define main window */
-  mainWindow = new BrowserWindow({
+  this.mainWindow = new BrowserWindow({
 		frame: global.DEBUG.isOn() ? false : false,
 		height: 600,
 		resizable: global.DEBUG.isOn() ? true : false,
-		width: 600
+		width: 1000, 
+    webPreferences: {
+      devTools: global.DEBUG.isOn() ? true : false
+    }
 	});
-  mainWindow.hide();
+  this.mainWindow.hide();
 
-  splashWindow.loadURL('file://' + __dirname + '/app/pages/init.html');
-	splashWindow.once('ready-to-show', ()=>{splashWindow.show()});
+  this.splashWindow.loadURL('file://' + __dirname + '/app/pages/init.html');
+	this.splashWindow.once('ready-to-show', ()=>{this.splashWindow.show()});
   
-  this.browserWindows.push({key: "splashWindow", window: splashWindow});
-  this.browserWindows.push({key: "mainWindow", window: mainWindow});
-
-
   this.adminExists = () => {
   /*admin user exists, load main process*/
-  
-	  mainWindow.loadURL('file://' + __dirname + '/app/pages/index.html');
-	  mainWindow.once('ready-to-show', ()=>{
-		  splashWindow.close();
-		  mainWindow.show();
+    console.log('admin exists: true');
+	  this.mainWindow.loadURL('file://' + __dirname + '/app/pages/index.html');
+    this.splashWindow.close();
+		  this.mainWindow.show();
+	  this.mainWindow.once('ready-to-show', ()=>{
+		  
 	  });
   };
 
   /*create new admin-level user*/
   this.createAdminUser = (userData) => {
-    console.log('aww fuck yeah! ', userData);
+    //valid creation key
+    if(userData.authKey == this.adminCreationKey){
+      var _user = new User(userData.username, isNewUser = true);
+      _user.email(userData.email);
+      _user.pin(global.Util.crypt(userData.pin, _user.getSalt()));
+      _user.accessLevel(4);
+      _user.password(global.Util.crypt(userData.pw, _user.getSalt()));
+      console.log('New User: ', _user);
+      var dbObj = _user.export();
+      var pointer= this;
+
+      console.log('user data to add: ',dbObj );
+      //store user
+      this.DbManager.collection('users').insert(dbObj, encode = true,
+      ()=>{ pointer.createAdminCallback(insert = true)}, 
+      ()=>{ pointer.createAdminCallback(insert = false)});
+    }
   };
 
   /*push msg to init window, show admin creation form - unique key to prevent will-nilly admin creation*/
-  this.promptForAdminCreation = () => {
+  this.promptForAdminCreation = (dbresp) => {
+    console.log("promptForAdminCreation: ", dbresp);
     this.adminCreationKey = Util.randomKey();
     splashWindow.webContents.send('admin-required', {key:this.adminCreationKey });
   };
@@ -85,4 +108,12 @@ app.on('ready', function(){
     /*TODO !  need to deal with db failure*/
     process.stdout.write('database failure', dbResponse);
   }
+
+  this.createAdminCallback = (isSuccess = false) => {
+    /**TODO:: trigger response once admin account created.  
+     * alert user, close init window, fire main window display.
+     */
+
+    this.adminCreationKey = null;
+  };
 });

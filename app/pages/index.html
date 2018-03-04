@@ -4,30 +4,121 @@
     <meta charset="UTF-8">
     <title>IT^3</title>
     <link href="./css/window.css" rel="stylesheet" type="text/css"/>
+    <link href="./css/font-awesome/css/font-awesome-4.7.0.css" rel="stylesheet" title="Default Style">
+
 </head>
 
 <body>
+<i id="main-window-close" class="fa fa-window-close" aria-hidden="true"></i>
 
-  <div id="menu">
+  <div id="main-menu">
 	
-    <div class="menu-button">File</div>
-    <div class="menu-button">Help</div>
-    <div class="menu-button">Info</div>
-		<div id="exit-button"class="menu-button">Exit</div>
+  <!--   <div class="menu-button">File</div> -->
+  <!--   <div class="menu-button">Help</div> -->
+  <!--   <div class="menu-button">Info</div> -->
+	<!-- 	<div id="exit-button"class="menu-button">Exit</div> -->
 
   </div>
 
-    <div id="login-container">
-      <label for="username">Username</label>
-      <input id="username">
-      <label for="pwd">password</label>
-      <input type="password" id="pwd">
-    </div>
-    <div><button id="loginsubmit">Login</button></div>
+<style>
+   .fa-window-close{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 22px;
+    border-radius: -6px;
+    color: grey;
+    cursor: pointer;
+    transition: 0.5s all;
+    line-height: 18px;
+    margin-top: 3px;
+  }
+  .fa-window-close:hover {
+    color: white;
+    background-color: grey;
+    transition: 0.5s all;
 
-    <div class="output"></div>
+  }
+
+  #main-menu{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .menu-item-wrapper {
+    flex-direction: column;
+    letter-spacing: 0.05em;
+  }
+
+  .menu-option{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+ .menu-option.main-menu-option{
+  text-align: center;
+  text-transform: uppercase;
+  border: 1px solid lightgray;
+  border-bottom: none;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 5px 5px 0px 0px;
+  background-color: gray;
+  color: white;
+  transition: 0.5s all;
+  min-width: 185px;
+  }
+
+  .menu-option.main-menu-option:hover, 
+  .menu-option.main-menu-option:active {
+    transition: 0.5s all;
+    background-color: white;
+    color: grey;
+  }
+
+  .sub-menu-container{
+    display: none;
+    border: 1px solid grey;
+    margin: 4px;
+    margin-left: 11px;
+    margin-right: 11px;
+    margin-top: -11px;
+  }
+
+  .sub-menu-item-wrapper{
+    border-bottom: double grey;
+    padding-top: 9px;
+    border-bottom: double grey;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+  }
+  .sub-menu-item-wrapper:hover{
+    background-color: #6CD1D1;
+  }
+
+  .sub-menu-option {
+    margin-bottom: px;
+  }
+ 
+ .sub-menu-item-wrapper > .sub-menu-container{
+   background-color: white !important;
+ }
+.sub-menu-item-wrapper > .sub-menu-container :hover{
+   background-color: lightgrey !important;
+ }
+
+ .sub-menu-item-wrapper > .main-menu-option:hover {
+  background-color: grey;
+    color: white;
+    cursor: default;
+ }
 
 
+
+
+</style>
 <script src="../js/index.js"></script>
 </body>
 

@@ -7,6 +7,8 @@ var User = function(name, isNewUser = false){
 	this.pwdordEncrypted = false;
   this.systemAccessLevel = -1;
 	this.hasSalt = false;
+  this.AccessPin = null;
+
 
   this.email = (_email = null) => {
     if(_email)
@@ -20,6 +22,13 @@ var User = function(name, isNewUser = false){
       this._userName = _name;
     else
       return this._userName;
+  };
+
+  this.pin = (_pin = false) => {
+    if(_pin)
+      this.AccessPin = _pin;
+    else
+      return this.AccessPin;
   };
 
   this.setSalt = (_salt = null) => {
@@ -66,10 +75,12 @@ var User = function(name, isNewUser = false){
 	
 	this.export = () => {
 		return {
-			username : this._userName,
 			uidkey : this.encryptedPassword,
 			salt : this.userSalt,
-			email : this.userEmail
+			email : this.userEmail,
+      username : this._userName,
+      accessLevel : this.systemAccessLevel.toString(),
+      pin : this.AccessPin
 		}
 	}
 

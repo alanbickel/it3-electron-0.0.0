@@ -16,8 +16,10 @@ var InitListener = (function(parent, ipcModule){
 
   //confirm creation of admin acocunt
   ipcModule.on('confirm-admin-account-create', function(evt, data){
-    parent.dialog.showMessageBox(data.messageOpts, ()=> {
-      parent.createAdminUser(data);
+    parent.dialog.showMessageBox(data.messageOpts, (response)=> {
+      //if user confirms
+      if(response)
+        parent.createAdminUser(data);
     });
   });
 
@@ -25,18 +27,6 @@ var InitListener = (function(parent, ipcModule){
   ipcModule.on('quit', function(){
     parent.quit();
   });
-
-
-
-  /**
-   * EVENTS BOUND TO MAIN WINDOW
-   */
-
-  /**quit request from main browser window */
-  ipcModule.on('close-main-window', function () {
-    parent.quit();
-  });
-
 });
 
 module.exports = InitListener;

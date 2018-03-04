@@ -10,9 +10,8 @@ $(document).on('click', '.fa-window-close', function(){
   ipcRenderer.send('quit');
 });
 
-
 $(document).on('click', '#adminSubmit', function(){
-validateCAinput();
+  validateCAinput();
 });
 
 /* panel creation functions*/
@@ -27,7 +26,8 @@ var adminCreate = (adminKey)=> {
     {type: "email", id: "email-1"},
     {type: "email", id: "email-2"},
     {type: "password", id: "pw-1"},
-    {type: "password", id: "pw-2"}
+    {type: "password", id: "pw-2"},
+    {type: "password", id: "pin"}
   ];
 
   var labels = [
@@ -35,7 +35,8 @@ var adminCreate = (adminKey)=> {
     {htmlFor : "email-1", innerText: "Email"},
     {htmlFor : "email-2", innerText: "Confirm Email"},
     {htmlFor : "pw-1", innerText: "Password"},
-    {htmlFor : "pw-2", innerText: "Confirm Password"}
+    {htmlFor : "pw-2", innerText: "Confirm Password"},
+    {htmlFor : "pin", innerText: "Quick Access PIN"},
   ];
 
   for(var i = 0; i < inputs.length; i++){
@@ -66,9 +67,7 @@ var adminCreate = (adminKey)=> {
   
 }
 
-
 /*input validation functions */
-
 function validateCAinput(){
   var content = document.getElementById('admin-create');
   var empty = false;
@@ -103,14 +102,16 @@ function validateCAinput(){
   /*confirm creation w/ user */
   emitData = {
                 type: 'question',
-                buttons: ['Yes', 'No'],
+                buttons: ['No', 'Yes'],
                 title: 'Confirm',
-                message: 'Create Admin Account for user : '+ document.getElementById('username').value
+                message: 'Create Admin Account for user : '+ document.getElementById('username').value + " ?"
   };
 
   var payload = { username : document.getElementById('username').value,
                   email : document.getElementById('email-1').value,
                   pw : document.getElementById('pw-1').value,
+                  pin : pin.value,
+                  authKey : content.dataset.key,
                   messageOpts: emitData
                 };
 
