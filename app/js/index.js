@@ -1,14 +1,21 @@
 /*RENDERER CHANNEL*/
-
 global.electron = require('electron');
 var {ipcRenderer, remote} = require('electron');  
+var EventListener =  require('../js/system/eventListeners/indexWinListener');
+var Modal = require('../js/system/modal');
 
-//comm w/main process
-//var main = remote.require("./main.js");
 var $ = require('jquery');
+
+var evtListener = new EventListener(this, ipcRenderer);
 
 $(document).ready(function(){
   renderMainMenu();
+
+ $(".menu-option").on('click', function(){
+
+    if(this.dataset.emit)
+      evtListener.emit(this.dataset.emit, {key: 'TEST SUCCESS!'});
+ });
 });
 
 $(document).on('click', ".main-menu-option", function(){
@@ -24,7 +31,6 @@ $(document).on('click', ".main-menu-option", function(){
   $target.parent().find('.sub-menu-container').each(function(){
     $(this).slideToggle();
   });
-  debugger;
 });
 
 
@@ -33,6 +39,7 @@ $(document).on('click', ".main-menu-option", function(){
       name: "System",
       id: "file-main",
       classList:  ['menu-option', 'main-menu-option'],
+      emit: null,
       options : [
         {
           name: "Administration",
@@ -42,6 +49,7 @@ $(document).on('click', ".main-menu-option", function(){
             {
               name : "Add User", 
               id: "create-user", 
+              emit: 'create-new-user',
               classList: ['menu-option', 'nested-menu-option', 'system-option'],
               options: [], 
               enabled: true
@@ -154,8 +162,6 @@ $(document).on('click', ".main-menu-option", function(){
     }
   }
 
-
-
 function renderMainMenu(){
 
   var menuContainer = document.getElementById('main-menu');
@@ -166,18 +172,23 @@ function renderMainMenu(){
   
 }
 
-
 function appendOptionsToMenu(parent, menuItem, isSubMenu){
   var wrapper = document.createElement('div');
   var item = document.createElement('div');
   wrapper.classList.add(isSubMenu ? 'sub-menu-item-wrapper' : 'menu-item-wrapper');
-  
+  wrapper.classList.add('menu-item-clickable');
   item.id = menuItem.id;
   item.innerText = menuItem.name;
 
   for(var i in menuItem.classList)
     item.classList.add(menuItem.classList[i]);
+
   item.disabled = !menuItem.enabled;
+
+//emit event to ipcModule for communication with main process
+  if(menuItem.emit)
+    item.dataset.emit = menuItem.emit;
+
   wrapper.appendChild(item);
   parent.appendChild(wrapper);
   //menu has sub-menus?
@@ -196,6 +207,8 @@ function appendOptionsToMenu(parent, menuItem, isSubMenu){
 document.getElementById('main-window-close').addEventListener('click', function () {
     global.electron.ipcRenderer.sendSync('close-main-window');
 });
+
+ 
 
 
 

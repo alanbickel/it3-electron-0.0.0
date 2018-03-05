@@ -5,7 +5,6 @@ var $ = require('jquery');
 /**inform main process that load is complete */
 ipcRenderer.send('init-window-loaded');
 
-
 $(document).on('click', '.fa-window-close', function(){
   ipcRenderer.send('quit');
 });

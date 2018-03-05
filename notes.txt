@@ -1,9 +1,23 @@
 determine whether to encode new items when entering into item database?  
 	is this necessary? 
 
-consider moving encrypt function to User Interface.
-gather initialization reqs, in startup routine, 
-fire events into new window (create admin, etc...)
+
 generate new browserwindow for each interaction triggered by async action?
+
+
+prelimiary bridgework between client window and main process in place.  
+event listener firing to main on document click, bound to 'emit' property of
+generated menu items from object structure.  
+
+consider moving menu structure objects into their own files.  
+
+NEED TO CLEAN UP index.js, and look @ passing data back to client from modal window. 
+
+this modal concept still needs to be tested, should probably create a modal event listener
+class to keep main window listener from becomin cluttererd with a million un-related 
+modal communications.  
+
+next step is to gather data form modal window, pass back to main for processing, and return results to 
+DOM.  
 
 

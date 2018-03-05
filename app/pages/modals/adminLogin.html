@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IT^3</title>
+</head>
+
+
+<body>
+
+  <p>Please provide admin credentials to perform this action.</p>
+
+  <div class="login-wrapper">
+    <div class="input-row">
+      <label for="admin-username">Admin Username</label>
+      <input type='text' id="admin-username" />
+    </div>
+
+    <div class="input-row">
+      <label for="admin-pass">Admin Password</label>
+      <input type="password" id="admin-password">
+    </div>
+
+    <div class="submit-wrapper">
+      <button id="admin-submit">Submit</button>
+    </div>
+  </div>
+
+  <style>
+  .input-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .login-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  </style>
+</body>
