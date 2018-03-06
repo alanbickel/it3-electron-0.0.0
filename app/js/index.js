@@ -13,8 +13,16 @@ $(document).ready(function(){
 
  $(".menu-option").on('click', function(){
 
-    if(this.dataset.emit)
-      evtListener.emit(this.dataset.emit, {key: 'TEST SUCCESS!'});
+    if(this.dataset.emit){
+
+			var payload = {
+				fileName: this.dataset.modalFile,
+				configOpts: this.dataset.modalConfig,
+				modalType: this.dataset.modalType
+			}
+			evtListener.emit(this.dataset.emit, payload);
+		}
+      
  });
 });
 
@@ -49,7 +57,10 @@ $(document).on('click', ".main-menu-option", function(){
             {
               name : "Add User", 
               id: "create-user", 
-              emit: 'create-new-user',
+							emit: 'create-modal',
+							modalFile: "adminLogin.html",
+							modalType: "multi-input",
+						
               classList: ['menu-option', 'nested-menu-option', 'system-option'],
               options: [], 
               enabled: true
@@ -186,8 +197,13 @@ function appendOptionsToMenu(parent, menuItem, isSubMenu){
   item.disabled = !menuItem.enabled;
 
 //emit event to ipcModule for communication with main process
-  if(menuItem.emit)
-    item.dataset.emit = menuItem.emit;
+  if(menuItem.emit){
+		console.log(menuItem);
+		item.dataset.emit = menuItem.emit;
+		item.dataset.modalFile = menuItem.modalFile;
+		item.dataset.modalType = menuItem.modalType;
+	}
+    
 
   wrapper.appendChild(item);
   parent.appendChild(wrapper);

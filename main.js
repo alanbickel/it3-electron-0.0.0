@@ -1,6 +1,6 @@
 /**system dependencies */
 var electron = require('electron');
-var {app, BrowserWindow, dialog} = electron;
+var {app, BrowserWindow, dialog, globalShortcut} = electron;
 var ipc = electron.ipcMain;
 var _app = null;
 
@@ -15,6 +15,7 @@ var User = require('./app/js/entity/user');
 var UI = require('./app/js/model/userInterface');
 var InitEventListener = require('./app/js/system/eventListeners/initListener');
 var MainWinEvtListener = require('./app/js/system/eventListeners/mainWinListener');
+var ModalEvtListener = require('./app/js/system/eventListeners/mainModalListener');
 
 /**define global resources */
 global.Util = new util();
@@ -23,6 +24,15 @@ global.DEBUG = new debug(true);
 //error handling
 
 app.on('ready', function(){
+
+	/**turn off console access if not in debug mode */
+	if(!global.DEBUG.isOn()){
+		globalShortcut.register('Control+Shift+I', () => {
+			console.log("\nconsole open attempt\n");
+		})
+	}
+
+
 
   //list of windows
   this.splashWindow = null;
@@ -35,7 +45,9 @@ app.on('ready', function(){
   /**event listener for init window */
   var initListener =  new InitEventListener(this, ipc);
   //event listener for main window
-  var mainWindowListener = new MainWinEvtListener(this, ipc);
+	var mainWindowListener = new MainWinEvtListener(this, ipc);
+	//listten on modal
+	var modalWindowListener = new ModalEvtListener(this, ipc);
 
   /*define init window*/
 	this.splashWindow = new BrowserWindow({

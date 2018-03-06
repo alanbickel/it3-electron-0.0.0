@@ -8,8 +8,20 @@ var Modal = (function(filePath, ipcModule){
   this.window = null;
 
   this.render = (configOpts)=> {
-    this.window  = new BrowserWindow(configOpts);
-    this.window.loadURL('file://' + this.file);
+
+		var modalConfig =  {
+			frame: false,
+			height: 400,
+			resizable: false,
+			width: 600, 
+			webPreferences: {
+				devTools: true
+			}
+		};
+
+		this.window  = new BrowserWindow(modalConfig);
+
+    this.window.loadURL('file://' + app.getAppPath() + "/app/pages/modals/" +  this.file);
     this.window.once('ready-to-show', ()=>{window.splashWindow.show()});
   };
 

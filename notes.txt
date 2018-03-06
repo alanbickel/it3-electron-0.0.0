@@ -21,3 +21,4 @@ next step is to gather data form modal window, pass back to main for processing,
 DOM.  
 
 
+modal listener acctive, working.  need to look @ deep copy of MenuStruct object for passing web params, or just provide default window params for all modals;

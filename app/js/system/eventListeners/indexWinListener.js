@@ -5,7 +5,9 @@ var $ = require('jquery');
 var IndexWinListener = (function(parent, ipcModule){
  
  this.emit = (channel, data) => {
-  ipcModule.send(channel, data);
+
+	console.log(data);
+	ipcModule.send(channel, data);
  }
 });
 
