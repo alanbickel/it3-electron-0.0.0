@@ -8,7 +8,10 @@
 
 <body>
 
-  <p>Please provide admin credentials to perform this action.</p>
+	<div class="login-wrapper">
+		<h3>Please provide admin credentials to perform this action.</h3>
+	</div>
+  
 
   <div class="login-wrapper">
     <div class="input-row">
@@ -22,20 +25,39 @@
     </div>
 
     <div class="submit-wrapper">
-      <button id="admin-submit">Submit</button>
+			<button id="admin-submit">Submit</button>
+			<button id="admin-cancel">Cancel</button>
     </div>
   </div>
 
   <style>
   .input-row{
-    display: flex;
+		display: flex;
     flex-direction: row;
     justify-content: space-between;
+    width: 50%;
+    text-align: center;
+    margin: auto;
+		margin-bottom: 20px;
   }
   .login-wrapper{
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+		text-align: center;
+  }
+
+	.submit-wrapper{
+		display: flex;
     flex-direction: column;
     justify-content: center;
-  }
+    margin-top: 20px;
+	}
+
+	.submit-wrapper > button {
+		width: 30%;
+		background-color: lightgray;
+		margin: 10px;
+	}
   </style>
 </body>

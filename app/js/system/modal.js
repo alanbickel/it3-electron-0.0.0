@@ -11,7 +11,7 @@ var Modal = (function(filePath, ipcModule){
 
 		var modalConfig =  {
 			frame: false,
-			height: 400,
+			height: 275,
 			resizable: false,
 			width: 600, 
 			webPreferences: {
