@@ -73,7 +73,7 @@ app.on('ready', function(){
 	this.splashWindow.once('ready-to-show', ()=>{this.splashWindow.show()});
   
   this.adminExists = () => {
-  /*admin user exists, load main process*/
+  	/*admin user exists, load main process*/
     console.log('admin exists: true');
 	  this.mainWindow.loadURL('file://' + __dirname + '/app/pages/index.html');
     this.splashWindow.close();
@@ -108,7 +108,7 @@ app.on('ready', function(){
   this.promptForAdminCreation = (dbresp) => {
     console.log("promptForAdminCreation: ", dbresp);
     this.adminCreationKey = Util.randomKey();
-    splashWindow.webContents.send('admin-required', {key:this.adminCreationKey });
+    this.splashWindow.webContents.send('admin-required', {key:this.adminCreationKey });
   };
 
   /*startup routine callback functions*/
@@ -119,7 +119,28 @@ app.on('ready', function(){
   this.dbInitializeFailure = (dbResponse)=>{
     /*TODO !  need to deal with db failure*/
     process.stdout.write('database failure', dbResponse);
-  }
+	}
+	
+	/*admin login request form main window-induced modal */
+	this.checkAdminLogin = (credentialObject)=> {
+
+		var usr = new User(credentialObject.userName);
+		var userDb = this.DbManager.collection('users');
+		var ui = new UI(usr,credentialObject.password, userDb);
+
+		
+
+		var isAdmin = function(){
+			console.log('IS ADMIN!');
+		}
+
+		var isNotAdmin = function(){
+			console.log('IS NOT ADMIN!');
+		}
+
+		ui.isValidUser(isAdmin, isNotAdmin);
+
+	}
 
   this.createAdminCallback = (isSuccess = false) => {
     /**TODO:: trigger response once admin account created.  

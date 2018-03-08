@@ -50,6 +50,10 @@ var UserInterface = function(_user, _pwString, dbInstance){
 		return this.user;
 	}
 
+	this.isAdmin = ()=> {
+
+	};
+
 };
 
 module.exports = UserInterface;

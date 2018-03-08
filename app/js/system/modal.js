@@ -5,8 +5,8 @@ var Modal = (function(filePath, ipcModule){
 
   this.file = filePath;
   this.ipcModule = ipcModule;
-  this.window = null;
-
+	this.window = null;
+	
   this.render = (configOpts)=> {
 
 		var modalConfig =  {
@@ -18,17 +18,11 @@ var Modal = (function(filePath, ipcModule){
 				devTools: true
 			}
 		};
-
 		this.window  = new BrowserWindow(modalConfig);
-
     this.window.loadURL('file://' + app.getAppPath() + "/app/pages/modals/" +  this.file);
-    this.window.once('ready-to-show', ()=>{window.splashWindow.show()});
-  };
-
-
+		this.window.once('ready-to-show', ()=>{window.splashWindow.show()});	
+	};
  return this;
 });
-
-
 
 module.exports = Modal;
