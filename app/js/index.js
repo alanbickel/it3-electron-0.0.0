@@ -93,16 +93,6 @@ document.getElementById('main-window-close').addEventListener('click', function 
 });
 
 
-
-
-/**functions called on receiving message from main process */
-
-this.displayAdminConfirmation = () =>{
-	var display_ = document.createElement('div');
-	display_.innerText = "Admin Login Successful.";
-	$(document).append(display_);
-}
-
  
 
 
