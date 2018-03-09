@@ -6,6 +6,7 @@ var Modal = (function(filePath, ipcModule){
   this.file = filePath;
   this.ipcModule = ipcModule;
 	this.window = null;
+	var pointer = this;
 	
   this.render = (configOpts)=> {
 
@@ -20,8 +21,9 @@ var Modal = (function(filePath, ipcModule){
 		};
 		this.window  = new BrowserWindow(modalConfig);
     this.window.loadURL('file://' + app.getAppPath() + "/app/pages/modals/" +  this.file);
-		this.window.once('ready-to-show', ()=>{window.splashWindow.show()});	
+		this.window.once('ready-to-show', ()=>{window.show()});	
 	};
+
  return this;
 });
 

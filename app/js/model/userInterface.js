@@ -26,7 +26,7 @@ var UserInterface = function(_user, _pwString, dbInstance){
     var _salt = dbUserMatch.salt;
     var _storedPw = dbUserMatch.uidkey
     this.encryptUserPassword(this.passwordString, _salt);
-		console.log('here....');
+		console.log('in UI.passwordMatches()');
 		var _match = this.user.password() == _storedPw;
 		
 		console.log('STORED: ', _storedPw);
@@ -42,7 +42,7 @@ var UserInterface = function(_user, _pwString, dbInstance){
     this.success = success;
     this.failure = failure;
 
-    this.userExists(this.passwordMatches, (e)=>{console.log('user exists failure')});
+    this.userExists(this.passwordMatches, (e)=>{console.log('user exists failure', e)});
 	};
 	
 	this.getUser = () => {

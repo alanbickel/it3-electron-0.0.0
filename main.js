@@ -32,8 +32,6 @@ app.on('ready', function(){
 		})
 	}
 
-
-
   //list of windows
   this.splashWindow = null;
   this.mainWindow = null;
@@ -47,7 +45,7 @@ app.on('ready', function(){
   //event listener for main window
 	var mainWindowListener = new MainWinEvtListener(this, ipc);
 	//listten on modal
-	var modalWindowListener = new ModalEvtListener(this, ipc);
+	this.modalWindowListener = new ModalEvtListener(this, ipc);
 
   /*define init window*/
 	this.splashWindow = new BrowserWindow({
@@ -123,19 +121,21 @@ app.on('ready', function(){
 	
 	/*admin login request form main window-induced modal */
 	this.checkAdminLogin = (credentialObject)=> {
-
-		var usr = new User(credentialObject.userName);
+		var usr = new User(credentialObject.username);
 		var userDb = this.DbManager.collection('users');
 		var ui = new UI(usr,credentialObject.password, userDb);
-
-		
+		var ptr = this;
 
 		var isAdmin = function(){
-			console.log('IS ADMIN!');
+			//kill modal
+			ptr.modalWindowListener.modalBrowserWindow().close();
+			ptr.mainWindow.send('admin-login-success', {});
 		}
 
 		var isNotAdmin = function(){
-			console.log('IS NOT ADMIN!');
+			console.log('Admin login failed...');
+			//kill modal
+			ptr.modalWindowListener.modalBrowserWindow().close();
 		}
 
 		ui.isValidUser(isAdmin, isNotAdmin);

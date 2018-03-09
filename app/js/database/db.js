@@ -61,7 +61,6 @@ function Database(databaseName){
 		this.fetchEncodedKey = (plaintextObject, onCompleteCallback, onFailCallback) => {
 			
 			var itemObject = this.transform(plaintextObject, true); 
-
 			var pointer = this;
 
 			this.database.find(itemObject, function(e, document){
