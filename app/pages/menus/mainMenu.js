@@ -12,7 +12,7 @@ var mainMenu = {
 				options : [
 					{
 						name : "Enable Admin Mode", 
-						id: "create-user", 
+						id: "admin-enable", 
 						emit: 'create-modal',
 						modalFile: "adminLogin.html",
 						modalType: "multi-input",
@@ -112,23 +112,23 @@ var mainMenu = {
 		options: [
 			{
 				name: "Add Item",
-				id : "add-new-item",
+				id : "add-item",
 				classList : ['menu-option', 'sub-menu-option', 'item-menu-option'],
 				options: [],
-				enabled: true
+				enabled: false
 			}, 
 			{
 				name: "Edit Item",
 				id : "edit-item",
 				classList : ['menu-option', 'sub-menu-option', 'item-menu-option'],
 				options: [],
-				enabled: true
+				enabled: false
 			}, {
 				name: "Delete Item",
-				id : "edit-item",
+				id : "remove-item",
 				classList : ['menu-option', 'sub-menu-option', 'item-menu-option'],
 				options: [],
-				enabled: true
+				enabled: false
 			}
 		], 
 		enabled : true

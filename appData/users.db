@@ -1,2 +1,3 @@
-{"uidkey":"e768dc5f4b208844bd47112995c4ccf41fa066da4a08315769ac1ebe59d0185c","salt":"eEJSM2wzU1FVQlFVZ1owTw==","email":"ZW1haWw=","username":"YWxhbg==","accessLevel":"NA==","pin":"YjZmMmZiYjc0ZThjNTQ3ZjQwNGZhMWZiNDI1OTU1ZWI4NmVmMDRhOTZiYTY5MGQwZDZkNmVlZjM2MzFkODdmNA==","_id":"U2fesyc3ZzTr8WhH"}
+{"uidkey":"1e35eec7761be672b1b5c3745944b01da20dda26aa7433fe4e971f466ac8f6b9","salt":"WmdOckJlQTVwNzJndlJ1Sg==","email":"ZW1haWw=","username":"YWxhbg==","accessLevel":"NA==","pin":"YTcwYjVjM2EyNmEyZjg1Y2Y5OGEwZjM0NDRlMzRiYjA4YWU3ZjViZmZmOTlmODg4ZmQ5YWJhZmFmNmJmYjAwMA==","_id":"jRekswghqW7FTlYa"}
+{"$$indexCreated":{"fieldName":"label","unique":true,"sparse":false}}
 {"$$indexCreated":{"fieldName":"username","unique":true,"sparse":false}}

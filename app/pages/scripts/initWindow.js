@@ -1,12 +1,12 @@
 
 var {ipcRenderer, remote, dialog} = require('electron');  
-
 var $ = require('jquery');
+
 /**inform main process that load is complete */
 ipcRenderer.send('init-window-loaded');
 
 $(document).on('click', '.fa-window-close', function(){
-  ipcRenderer.send('quit');
+  ipcRenderer.send('close-main-window');
 });
 
 $(document).on('click', '#adminSubmit', function(){
@@ -110,7 +110,7 @@ function validateCAinput(){
                   email : document.getElementById('email-1').value,
                   pw : document.getElementById('pw-1').value,
                   pin : pin.value,
-                  authKey : content.dataset.key,
+                  createAdminToken : content.dataset.key,
                   messageOpts: emitData
                 };
 

@@ -1,11 +1,8 @@
 /**IO event listener for main process comm w/ client index.js */
 
-var MainWinListener = (function(parent, ipcModule){
-
-
+var MainIndexListener = (function(parent, ipcModule){
   ipcModule.on('close-main-window', function(){
     parent.quit();
   });
 });
-
-module.exports = MainWinListener;
+module.exports = MainIndexListener;

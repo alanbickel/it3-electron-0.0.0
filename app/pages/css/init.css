@@ -1,0 +1,46 @@
+.fa-window-close{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 22px;
+    border-radius: -6px;
+    color: red;
+    cursor: pointer;
+  }
+
+  #load-display{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 20px;
+  }
+
+  .admin-input-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+
+  }
+
+  .admin-input-row > label {
+   text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: 10%;
+  }
+  .admin-input-row > input {
+     margin-right: 10%;
+  }
+
+  .submit-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 25px;
+  }
+
+  .submit-container > button {
+    border-radius: 5px;
+  }

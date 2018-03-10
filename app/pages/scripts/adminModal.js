@@ -1,10 +1,5 @@
-var modalListener = require('../../js/system/eventListeners/clientModalListener');
 var $ = require('jquery');
 var {ipcRenderer, remote} = require('electron');  
-
-
-var listener = new modalListener(this, ipcRenderer);
-
 
 var submitBtn = document.getElementById('admin-submit');
 var cancelBtn = document.getElementById('admin-cancel');

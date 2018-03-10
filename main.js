@@ -1,112 +1,96 @@
-/**system dependencies */
+/**node libraries */
 var electron = require('electron');
 var {app, BrowserWindow, dialog, globalShortcut} = electron;
 var ipc = electron.ipcMain;
-var _app = null;
-
-/*appp dependencies */
-var DbManager = require('./app/js/database/dbManager');
-var debug = require('./app/js/system/debug');
-var util = require('./app/js/system/util');
-var startupRoutine = require('./app/js/system/initialization/startup');
-
-/*objects and interfaces */
+/*IT3 Libraries*/
+var DatabaseManager = require('./app/js/database/databaseManager');
+var Utility  = require('./app/js/system/util');
+var StartupRountine = require('./app/js/system/initialization/startup');
 var User = require('./app/js/entity/user');
-var UI = require('./app/js/model/userInterface');
-var InitEventListener = require('./app/js/system/eventListeners/initListener');
-var MainWinEvtListener = require('./app/js/system/eventListeners/mainWinListener');
-var ModalEvtListener = require('./app/js/system/eventListeners/mainModalListener');
+var UserInterface = require('./app/js/model/userInterface');
+var InitListener = require('./app/js/system/eventListeners/initListener');
+var IndexListener = require('./app/js/system/eventListeners/mainIndexListener');
+var ModalListener = require('./app/js/system/eventListeners/mainModalListener');
 
 /**define global resources */
-global.Util = new util();
+global.Util = new Utility();
 //toggle debug output/conditions
-global.DEBUG = new debug(true);
-//error handling
+global.DEBUG = true;
 
 app.on('ready', function(){
-
-	/**turn off console access if not in debug mode */
-	if(!global.DEBUG.isOn()){
-		globalShortcut.register('Control+Shift+I', () => {
-			console.log("\nconsole open attempt\n");
-		})
-	}
-
-  //list of windows
+  //browser windows
   this.splashWindow = null;
   this.mainWindow = null;
+  //admin flags
+  this.adminIsActive = false;
+  this.createAdminToken = null;
+  //database instance manager
+  this.dbm = new DatabaseManager();
+  //initialization rountines
+  this.startup = new StartupRountine(this);
+  //event listeners
+  this.initListener = new InitListener(this, ipc);
+  this.indexListener = new IndexListener(this, ipc);
+  this.modalListener = new ModalListener(this, ipc);
+  //native modals
   this.dialog = dialog;
-  //manage databases
-  this.DbManager = new DbManager();
-  //initialization routines
-  this.startupRoutine = new startupRoutine(this);
-  /**event listener for init window */
-  var initListener =  new InitEventListener(this, ipc);
-  //event listener for main window
-	var mainWindowListener = new MainWinEvtListener(this, ipc);
-	//listten on modal
-	this.modalWindowListener = new ModalEvtListener(this, ipc);
+  //reference to self
+  var self = this;
 
-  /*define init window*/
-	this.splashWindow = new BrowserWindow({
-		frame: false,
+  //browser window display options
+  var splashOpts = {
+    frame: false,
 		width: 600, 
-		height: 600, webPreferences: {
-      devTools: global.DEBUG.isOn() ? true : false
-    }
-	});
-  /*define main window */
-  this.mainWindow = new BrowserWindow({
-		frame: global.DEBUG.isOn() ? false : false,
+		height: 600, webPreferences: {devTools: global.DEBUG}
+  };
+  var indexOpts = {
+    frame:  false,
 		height: 600,
-		resizable: global.DEBUG.isOn() ? true : false,
+		resizable: global.DEBUG,
 		width: 1000, 
-    webPreferences: {
-      devTools: global.DEBUG.isOn() ? true : false
-    }
-	});
-  this.mainWindow.hide();
-
-  this.splashWindow.loadURL('file://' + __dirname + '/app/pages/init.html');
-	this.splashWindow.once('ready-to-show', ()=>{this.splashWindow.show()});
-  
-  this.adminExists = () => {
-  	/*admin user exists, load main process*/
-    console.log('admin exists: true');
-	  this.mainWindow.loadURL('file://' + __dirname + '/app/pages/index.html');
-    this.splashWindow.close();
-		  this.mainWindow.show();
-	  this.mainWindow.once('ready-to-show', ()=>{
-		  
-	  });
+    webPreferences: {devTools: global.DEBUG}
   };
 
-  /*create new admin-level user*/
+  /*create browser windows*/
+	this.splashWindow = new BrowserWindow(splashOpts);
+  this.splashWindow.loadURL('file://' + __dirname + '/app/pages/init.html');
+	this.splashWindow.once('ready-to-show', ()=>{this.splashWindow.show()});
+  /*define main window */
+  this.mainWindow = new BrowserWindow(indexOpts);
+  this.mainWindow.hide();
+
+  /*****************************
+   * Begin Function Definitions*
+   *****************************/
+
+  //load application index page if admin exists - is only called if startup routines are successful
+  this.adminExists = () => {
+	  this.mainWindow.loadURL('file://' + __dirname + '/app/pages/index.html');
+    this.splashWindow.close();
+		this.mainWindow.show();
+  };
+
+  /*No admin found - force user to create admin profile before loading application index page*/
   this.createAdminUser = (userData) => {
     //valid creation key
-    if(userData.authKey == this.adminCreationKey){
+    if(userData.createAdminToken == this.createAdminToken){
       var _user = new User(userData.username, isNewUser = true);
       _user.email(userData.email);
       _user.pin(global.Util.crypt(userData.pin, _user.getSalt()));
       _user.accessLevel(4);
       _user.password(global.Util.crypt(userData.pw, _user.getSalt()));
-      console.log('New User: ', _user);
       var dbObj = _user.export();
-      var pointer= this;
-
-      console.log('user data to add: ',dbObj );
       //store user
-      this.DbManager.collection('users').insert(dbObj, encode = true,
-      ()=>{ pointer.createAdminCallback(insert = true)}, 
-      ()=>{ pointer.createAdminCallback(insert = false)});
+      this.dbm.collection('users').insert(dbObj, encode = true,
+      ()=>{ self.createAdminCallback(created = true)}, 
+      ()=>{ self.createAdminCallback(created = false)});
     }
   };
 
   /*push msg to init window, show admin creation form - unique key to prevent will-nilly admin creation*/
   this.promptForAdminCreation = (dbresp) => {
-    console.log("promptForAdminCreation: ", dbresp);
-    this.adminCreationKey = Util.randomKey();
-    this.splashWindow.webContents.send('admin-required', {key:this.adminCreationKey });
+    this.createAdminToken = Util.randomKey();
+    this.splashWindow.webContents.send('admin-required', {key:this.createAdminToken });
   };
 
   /*startup routine callback functions*/
@@ -122,23 +106,24 @@ app.on('ready', function(){
 	/*admin login request form main window-induced modal */
 	this.checkAdminLogin = (credentialObject)=> {
 		var usr = new User(credentialObject.username);
-		var userDb = this.DbManager.collection('users');
-		var ui = new UI(usr,credentialObject.password, userDb);
-		var ptr = this;
+		var userDb = this.dbm.collection('users');
+		var userInterface = new UserInterface(usr,credentialObject.password, userDb);
 
 		var isAdmin = function(){
 			//kill modal
-			ptr.modalWindowListener.modalBrowserWindow().close();
-			ptr.mainWindow.send('admin-login-success', {});
+			self.modalListener.modalBrowserWindow().close();
+			self.mainWindow.send('admin-login-success', {});
+      //remember admin state
+      self.adminIsActive = true;
 		}
-
 		var isNotAdmin = function(){
 			console.log('Admin login failed...');
 			//kill modal
-			ptr.modalWindowListener.modalBrowserWindow().close();
+			self.modalListener.modalBrowserWindow().close();
+      self.adminIsActive = false;
+      //TODO: inform index.js that admin state is dead - disable admin butttons, etc...
 		}
-
-		ui.isValidUser(isAdmin, isNotAdmin);
+		userInterface.isValidUser(isAdmin, isNotAdmin);
 
 	}
 
@@ -147,6 +132,6 @@ app.on('ready', function(){
      * alert user, close init window, fire main window display.
      */
 
-    this.adminCreationKey = null;
+    this.createAdminToken = null;
   };
 });

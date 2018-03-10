@@ -13,20 +13,15 @@ var Util = (function(){
   };
 
   this.randomKey = () => {
-    var saltLength = 16;
-    var index = 0;
+    var strLen = 16;
     var charString = "abcdefghijklmnopqrstuvwxyxzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    var str1 = "";
-    var str2 = "";
+    var str = "";
 
-    while(str2.length < saltLength){
-      var index1 = global.Util.randIntInRange(0, charString.length -1);
-      var index2 = global.Util.randIntInRange(0, charString.length -1);
+    while(str.length < strLen){
+      var index = global.Util.randIntInRange(0, charString.length -1);
       str1 = str1 + charString[index];
-      str2 = str2 + charString[index];
-      index++;
     }
-    return this.crypt(str1, str2);
+    return this.crypt(str, charString);
   }
 });
 

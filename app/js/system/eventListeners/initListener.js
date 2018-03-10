@@ -1,12 +1,11 @@
+/**I/O communication interface for initialization window */
 var InitListener = (function(parent, ipcModule){
 
-/**
- * EVENTS BOUND TO INITIALIZATION/SPLASH WINDOW
- */
   //fire initialization rountines on splash screen load
+  //this evt triggered by initAction.js
   ipcModule.on('init-window-loaded', function(){
-    parent.startupRoutine.initialize();
-    parent.startupRoutine.checkAdminExists();
+    parent.startup.initialize(global.DEBUG);
+    parent.startup.checkAdminExists();
   });
 
   /*display modal message*/
@@ -18,14 +17,8 @@ var InitListener = (function(parent, ipcModule){
   ipcModule.on('confirm-admin-account-create', function(evt, data){
     parent.dialog.showMessageBox(data.messageOpts, (response)=> {
       //if user confirms
-      if(response)
-        parent.createAdminUser(data);
+      if(response) parent.createAdminUser(data);
     });
-  });
-
-  /**quit request from init window */
-  ipcModule.on('quit', function(){
-    parent.quit();
   });
 });
 
