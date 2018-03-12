@@ -120,11 +120,10 @@ app.on('ready', function(){
 			console.log('Admin login failed...');
 			//kill modal
 			self.modalListener.modalBrowserWindow().close();
-      self.adminIsActive = false;
+      self.destroyAdminSession();
       //TODO: inform index.js that admin state is dead - disable admin butttons, etc...
 		}
 		userInterface.isValidUser(isAdmin, isNotAdmin);
-
 	}
 
   this.createAdminCallback = (isSuccess = false) => {
@@ -133,5 +132,12 @@ app.on('ready', function(){
      */
 
     this.createAdminToken = null;
-  };
+	};
+	
+	this.destroyAdminSession = ()=> {
+		this.adminIsActive = false;
+		this.createAdminToken = null;
+		this.mainWindow.send('admin-logout-success');
+		console.log('admin session successfully destroyed.');
+	};
 });

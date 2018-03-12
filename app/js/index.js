@@ -12,7 +12,8 @@ $(document).ready(function(){
   /*kill renderer process*/
   $('#main-window-close').on('click', function(){
     evtListener.emit('close-main-window', {});
-  });
+	});
+	
   /*emit user action request to server*/
   $(".menu-option").on('click', function(){
     if(this.dataset.emit){

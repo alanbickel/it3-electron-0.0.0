@@ -15,7 +15,6 @@ var mainMenu = {
 						id: "admin-enable", 
 						emit: 'create-modal',
 						modalFile: "adminLogin.html",
-						modalType: "multi-input",
 						classList: ['menu-option', 'nested-menu-option', 'system-option'],
 						options: [], 
 						enabled: true
@@ -113,6 +112,8 @@ var mainMenu = {
 			{
 				name: "Add Item",
 				id : "add-item",
+				emit: 'create-modal',
+				modalFile: "addItem.html",
 				classList : ['menu-option', 'sub-menu-option', 'item-menu-option'],
 				options: [],
 				enabled: false

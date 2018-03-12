@@ -19,7 +19,13 @@ var ModalListener = (function(parent, ipcModule){
 		modal.render(data.configOpts);
 		pointer.modalWindow = modal;
 	});
+
+
+	ipcModule.on('cancel-modal', function(){
+		console.log(pointer.modalBrowserWindow().close());
+	});
 	
+
 	/**admin login request from client */
 	ipcModule.on('admin-login', function(evt, data){
 		pointer.parent.checkAdminLogin(data);
