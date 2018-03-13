@@ -36,7 +36,7 @@ var Database = function (databaseName){
 
     this.database.insert(itemObject, function(error, document){
       if(error && onFailCallback )
-        onFailCallback(error.errorType);  
+        onFailCallback(error);  
       else if ( !error && onCompleteCallback) 
         onCompleteCallback(document);
     });
@@ -66,10 +66,10 @@ var Database = function (databaseName){
   /**retrieve all records */
   this.fetchAll = (successCallback, failureCallback) => {
     this.database.find({}, (error, document) => {
-      if(error && onFailCallback )
-        onFailCallback(error.errorType); 
-      else if ( !error && onCompleteCallback)
-			  onCompleteCallback(document);
+      if(error && failureCallback )
+			failureCallback(error.errorType); 
+      else if ( !error && successCallback)
+			successCallback(document);
     });
   };
   /**base64 encode */

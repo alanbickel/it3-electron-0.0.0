@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+		<title>IT^3</title>
+
+		<script src = "./scripts/vendor/jquery-3.2.1.min.js"></script>
+
+		<script src = "./scripts/addItemCategoryModal.js"></script>
+</head>
+
+
+<body>
+
+	<div class="add-item-wrapper">
+		<h3>Add an Item Category</h3>
+	</div>
+  
+
+  <div class="add-item-wrapper">
+    <div class="input-row">
+      <label for="category-name">Item Category Name</label>
+      <input type='text' id="category-name"/>
+    </div>
+
+    <div class="input-row">
+		 
+			<div id="current-categories"></div>
+    </div>
+
+    <div class="submit-wrapper">
+			<button id="add-item-submit">Submit</button>
+			<button id="add-item-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <style>
+  .input-row{
+		display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50%;
+    text-align: center;
+    margin: auto;
+		margin-bottom: 20px;
+  }
+  .add-item-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+		text-align: center;
+  }
+
+	#item-name{
+		transition: all 0.5s;
+	}
+
+	select{
+		width: 175px;
+		border-radius: 10px;
+		height: 25px;
+		transition: all 0.5s;
+	}
+
+	.submit-wrapper{
+		display: flex;
+    justify-content: center;
+    margin-top: 20px;
+	}
+
+	.submit-wrapper > button {
+		width: 30%;
+		background-color: lightgray;
+		margin: 10px;
+	}
+  </style>
+</body>

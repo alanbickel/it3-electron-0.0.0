@@ -18,6 +18,11 @@ var ModalListener = (function(parent, ipcModule){
 		var modal = new Modal(file, this);
 		modal.render(data.configOpts);
 		pointer.modalWindow = modal;
+
+		/*special requests to main?*/
+		if(data.modalType){
+			pointer.parent.modalDataRequest({ requestType: data.modalType});
+		}
 	});
 
 
@@ -30,6 +35,7 @@ var ModalListener = (function(parent, ipcModule){
 	ipcModule.on('admin-login', function(evt, data){
 		pointer.parent.checkAdminLogin(data);
 	});
+
 });
 
 module.exports = ModalListener;

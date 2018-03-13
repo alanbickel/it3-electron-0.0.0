@@ -110,6 +110,16 @@ var mainMenu = {
 		classList: ['menu-option' ,'main-menu-option'],
 		options: [
 			{
+				name: "Add Item Category",
+				id : "add-item-category",
+				emit: 'create-modal',
+				modalFile: "addItemCategory.html",
+				modalType: 'add-item-category',
+				classList : ['menu-option', 'sub-menu-option', 'item-menu-option'],
+				options: [],
+				enabled: false
+			}, 
+			{
 				name: "Add Item",
 				id : "add-item",
 				emit: 'create-modal',

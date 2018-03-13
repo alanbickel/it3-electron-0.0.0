@@ -17,8 +17,6 @@ var IndexWinListener = (function(parent, ipcModule){
 	ipcModule.on('admin-logout-success', function(data){
 	  pointer.disableAdminControls();
 	});
-	
-
 
   /*permission from server to enable admin level controls*/
   this.enableAdminControls = ()=> {
@@ -30,6 +28,7 @@ var IndexWinListener = (function(parent, ipcModule){
 		enable_button.dataset.modalFile = null;
 		//enable elevated privileges
 		document.getElementById('create-user').disabled = false;
+		document.getElementById('add-item-category').disabled = false;
     document.getElementById('add-item').disabled = false;
     document.getElementById('edit-item').disabled = false;
     document.getElementById('remove-item').disabled = false;
@@ -43,6 +42,7 @@ var IndexWinListener = (function(parent, ipcModule){
 		enable_button.dataset.modalFile = "adminLogin.html";
 		//disable elevated privileges
 		document.getElementById('create-user').disabled = true;
+		document.getElementById('add-item-category').disabled = true;
     document.getElementById('add-item').disabled = true;
     document.getElementById('edit-item').disabled = true;
     document.getElementById('remove-item').disabled = true;
