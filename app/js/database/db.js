@@ -3,7 +3,8 @@ var neDB = require('nedb');
 var Database = function (databaseName){
   this.db_root = "appData/";
   this.isInitialized = false;
-  this.database = null;
+	this.database = null;
+	var pointer = this;
 
   /**create database instance*/
   this.initialize = (collectionName) => {
@@ -64,12 +65,19 @@ var Database = function (databaseName){
     });
 	};
   /**retrieve all records */
-  this.fetchAll = (successCallback, failureCallback) => {
+  this.fetchAll = (successCallback, failureCallback, transform = false) => {
     this.database.find({}, (error, document) => {
       if(error && failureCallback )
 			failureCallback(error.errorType); 
-      else if ( !error && successCallback)
-			successCallback(document);
+      else if ( !error && successCallback){
+				
+				//need to decode b64 style data?
+				if(transform && document.length)
+					for(var i in document)
+						document[i] = pointer.transform(document[i]);
+				successCallback(document);
+			}
+			
     });
   };
   /**base64 encode */

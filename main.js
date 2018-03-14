@@ -141,45 +141,24 @@ app.on('ready', function(){
 		console.log('admin session successfully destroyed.');
 	};
 
-	//add entry to item category database
-	this.createItemCategory = (categoryName) => {
-		//only if admin mode enabled
-		if(this.adminIsActive){
-			//return message to client window
-			var clientResponse = function(categoryName = false){
-
-				var payload = {dataType:'category-list',data:categoryName };
-
-				self.modalListener.modalBrowserWindow().send('modal-data-request-response', payload);
-
-			};
-
-			var _success = function(dbResponse){
-				console.log('successful response: ');
-				console.log(dbResponse);
-				this.createItemCategory(dbResponse);
-			};
-			var _failure = function(error){
-				process.stdout.write('category insert error: ');
-				console.log(error);
-			};
-			var payload = {category:categoryName};
-
-			this.dbm.collection('categories').insert(payload, true,_success, _failure);
-		} else {
-			process.stdout.write('\nunauthorized request to insert item category. \n');
-		}
-		
-	};
+	this.adminIsLoggedIn = () => {
+		return this.adminIsActive;
+	}
 
 	/*current modal is making a data request */
 	this.modalDataRequest = (optionsObject) => {
 		//what type of data request
 		switch(optionsObject.requestType){
 			case "add-item-category":{
-				/**this is a 'create item category modal - retrieve a list of all existing item categories and send back to user*/
-				this.dbm.collection('categories').fetchAll((response)=>{console.log('success', response);}, (error)=>{console.log('fetchall error:', error)});
+				/**this is a 'create item category' modal - retrieve a list of all existing item categories and send back to user*/
+				var _callback = (response)=> {
+					console.log('callback response', response);
+					this.modalListener.transmit('modal-data-request-response', response);
+				};
+				this.dbm.collection('categories').fetchAll(_callback, _callback, true);
 			}
 		}
 	};
 });
+
+
