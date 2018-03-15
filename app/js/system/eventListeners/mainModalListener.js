@@ -7,6 +7,7 @@ var ModalListener = (function(parent, ipcModule){
 	this.parent = parent;
 	this.ipc = ipcModule;
 
+	
 	var pointer = this;
 
 	this.modalBrowserWindow = ()=> {
@@ -21,15 +22,26 @@ var ModalListener = (function(parent, ipcModule){
 	/**create native modal */
 	ipcModule.on('create-modal', function(evt, data){
 		var file = data.fileName;
-		var modal = new Modal(file, this);
-		modal.render(data.configOpts);
-		pointer.modalWindow = modal;
+		pointer.modalWindow = new Modal(pointer, file, this);
 
-		/*special requests to main?*/
-		if(data.modalType){
-			pointer.parent.modalDataRequest({ requestType: data.modalType});
-		}
+		/**any request from main process? */
+		pointer.modalWindow.setOnloadRequest({requestType: data.modalType});
+
+		pointer.modalWindow.render(data.configOpts);
+
+		
+		
+		///*special requests to main?*/
+		//if(data.modalType){
+		//	/**does native modal have an onLoad request to send to main?*/
+		//	pointer.modalWindow.window.once('ready-to-show', function(){
+		//		if(data.modalType){
+		//			pointer.parent.modalDataRequest({ requestType: data.modalType});
+		//		}		
+		//	});		
+		//}
 	});
+
 
 	//kill custom modal window
 	ipcModule.on('cancel-modal', function(){
