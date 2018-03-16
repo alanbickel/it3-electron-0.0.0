@@ -11,20 +11,15 @@ var Modal = function(parent, filePath, ipcModule){
   this.render = (configOpts)=> {
 		var modalConfig =  {
 			frame: false,
-			height: 275,
+			height: 400,
 			resizable: false,
-			width: 600, 
+			width: 700, 
 			webPreferences: {
 				devTools: true
 			}
 		};
 		this.window  = new BrowserWindow(modalConfig);
     this.window.loadURL('file://' + app.getAppPath() + "/app/pages/" +  this.file);
-		this.window.once('did-finish-load', ()=>{
-			pointer.main().modalDataRequest({ requestType: pointer.onloadRequestObject});
-			process.stdout.write('modal is ready to show');
-			window.show();
-		});	
 	};
 
 
