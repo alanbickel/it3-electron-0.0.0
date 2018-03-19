@@ -4,17 +4,13 @@
 <head>
 	<meta charset="UTF-8">
 	<title>IT^3</title>
-
 	<script src="./scripts/vendor/jquery-3.2.1.min.js"></script>
-
 	<script src="./scripts/addItemCategoryModal.js"></script>
 </head>
 
 
 <body>
-
 	<div class="container">
-
 		<div class="new-item-container">
 			<div class="add-item-wrapper">
 				<h3>Add an Item Category</h3>
@@ -29,12 +25,32 @@
 	</div>
 
 	<div class="submit-wrapper">
-		<button id="add-item-category-submit">Submit</button>
-		<button id="add-item-category-cancel">Cancel</button>
+		<button id="add-item-category-submit">Add Category</button>
+		<button id="add-item-category-cancel">Close Window</button>
 	</div>
 
 
+	<div  id="confirmation-message" class="confirmation-message">
+		Category Added Successfully
+	</div>
+	
 	<style>
+
+		.confirmation-message{
+			opacity: 0;
+			transition: all 1s;
+			display: flex;
+			width: 100%;
+			height: 80px;
+			font-size: 22px;
+			justify-content: center;
+			background-color: #16B063;
+			border: 1px solid grey;
+			border-radius: 10px;
+			line-height: 80px;
+			color: white;
+		}
+
 		.input-row {
 			display: flex;
 			flex-direction: row;

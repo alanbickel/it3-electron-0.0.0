@@ -44,15 +44,17 @@ var ModalListener = (function(parent, ipcModule){
 
 	/*add ITEM CATEGORY request */
 	ipcModule.on('add-item-category', function(evt, data){
+
+		console.log('add item request received.', data);
 		
 		var _success = (response)=> {
-			
+			console.log('success');
 			pointer.parent.modalDataRequest({ requestType: 'add-item-category'});
 			evt.sender.send('category-added');
-		}
+		};
 
 		var _failure = (response)=> {
-
+			console.log('failure', response);
 			evt.sender.send('category-add-failure');
 		};
 

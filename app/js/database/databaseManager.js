@@ -22,8 +22,8 @@ var DatabaseManager = function(){
 	 * add item category to 'categories' database
 	 * assumes admin state has been verified
 	*/
-	this.addItemCategory = (record, successCallback, failureCallback) => {
-		this.collection('categories').insert(record, successCallback, failureCallback);
+	this.addItemCategory = (record, encoded, successCallback, failureCallback) => {
+		this.collection('categories').insert(record, encoded, successCallback, failureCallback);
 	}
 };
 

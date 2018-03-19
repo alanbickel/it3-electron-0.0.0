@@ -150,14 +150,12 @@ app.on('ready', function(){
 
 		var self = this;
 
-		console.log('request object: ', optionsObject);
 		//what type of data request
 		switch(optionsObject.requestType){
 			case "add-item-category":{
 				/**this is a 'create item category' modal - retrieve a list of all existing item categories and send back to user*/
 				var _callback = (response) => {
-				//	console.log('callback response', this.modalListener);
-					self.modalListener.transmit('modal-data-request-response', response);
+						self.modalListener.transmit('modal-data-request-response', response);
 				};
 				this.dbm.collection('categories').fetchAll(_callback, _callback, true);
 			}

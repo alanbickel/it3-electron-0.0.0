@@ -18,21 +18,33 @@ ipcRenderer.on('modal-data-request-response', function(evt, data){
 	target.appendChild(content);
 
 	data.sort((a, b)=>{return a.category > b.category});
-	categories = data;
 
+	categories = [];
+	
 	for(var i in data){
 		if(data[i].category.length > 0){
+			categories.push(data[i]);
 			var _p = document.createElement('p');
 			_p.innerText = data[i].category;
 			content.appendChild(_p);
 		}
 	}
+
+	console.log('categories',categories );
 });
-//successfully added category to database
+
+/*successfully added category to database*/
 ipcRenderer.on('category-added', function(data){
-	console.log('category added');
+	//feedback for user
+	$("#confirmation-message").css({opacity: 1});
+	setTimeout(function(){
+		$("#confirmation-message").css({opacity: 0});
+	}, 3000);
 });
-//
+
+/**
+ * TODO: add failure notification
+ */
 ipcRenderer.on('category-add-failure', function(data){
 	console.log('category not added');
 });
@@ -41,7 +53,7 @@ ipcRenderer.on('category-add-failure', function(data){
 $(document).on('click', '#add-item-category-submit', function(){
 	categoryName = $("#category-name").val();
 
-	if(categoryName = ""){
+	if(categoryName == ""){
 		emitData = {type: "error", title: "Empty Category Name", message: "Category name cannot be empty.", callback: null};
 		ipcRenderer.send('show-message-modal', emitData);
 		return false;
@@ -56,7 +68,6 @@ $(document).on('click', '#add-item-category-submit', function(){
 			return false;
 		}
 	}
-
 	ipcRenderer.send('add-item-category', {category: categoryName});
 });
 
