@@ -152,7 +152,7 @@ app.on('ready', function(){
 
 		//what type of data request
 		switch(optionsObject.requestType){
-			case "add-item-category":{
+			case "request-item-category":{
 				/**this is a 'create item category' modal - retrieve a list of all existing item categories and send back to user*/
 				var _callback = (response) => {
 						self.modalListener.transmit('modal-data-request-response', response);

@@ -24,7 +24,16 @@ var DatabaseManager = function(){
 	*/
 	this.addItemCategory = (record, encoded, successCallback, failureCallback) => {
 		this.collection('categories').insert(record, encoded, successCallback, failureCallback);
-	}
+	};
+
+	/** 
+	 * add item to database 
+	*/
+	this.addItem = (record, encoded, successCallback, failureCallback) =>{
+
+		console.log('preparing to add: ', record);
+
+	};
 };
 
 module.exports = DatabaseManager;

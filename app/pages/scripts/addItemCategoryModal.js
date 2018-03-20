@@ -3,7 +3,7 @@ var {ipcRenderer, remote} = require('electron');
 var categories = null;
 
 /**onload request for item category list from main process */
-ipcRenderer.send('modal-onload-fired', {requestType:'add-item-category'});
+ipcRenderer.send('modal-onload-fired', {requestType:'request-item-category'});
 
 /**receive requested data from main process.  vfilter based on data type */
 ipcRenderer.on('modal-data-request-response', function(evt, data){
@@ -73,5 +73,7 @@ $(document).on('click', '#add-item-category-submit', function(){
 
 //close this modal
 $(document).on('click', '#add-item-category-cancel', function(){
-	ipcRenderer.send('cancel-modal', {});
+	ipcRenderer.send('cancel-modal', {
+
+	});
 });

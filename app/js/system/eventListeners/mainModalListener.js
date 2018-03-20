@@ -45,16 +45,16 @@ var ModalListener = (function(parent, ipcModule){
 	/*add ITEM CATEGORY request */
 	ipcModule.on('add-item-category', function(evt, data){
 
-		console.log('add item request received.', data);
+		console.log('add item category request received.', data);
 		
 		var _success = (response)=> {
 			console.log('success');
-			pointer.parent.modalDataRequest({ requestType: 'add-item-category'});
+			pointer.parent.modalDataRequest({ requestType: 'request-item-category'});
 			evt.sender.send('category-added');
 		};
 
 		var _failure = (response)=> {
-			console.log('failure', response);
+			console.log('add category failure', response);
 			evt.sender.send('category-add-failure');
 		};
 
@@ -65,6 +65,29 @@ var ModalListener = (function(parent, ipcModule){
 			process.stdout.write('unauthorized add category attempt');
 		
 		
+	});
+
+	/**ADD ITEM request */
+	ipcModule.on('create-item', function(evt, data){
+		console.log('add item request received.', data);
+		//request to send fresh item list to modal
+		var _success = ()=>{
+			pointer.parent.modalDataRequest({ requestType: 'request-items'});
+			evt.sender.send('item-added');
+		}
+
+		var _failure = (response)=> {
+			console.log('add item failure', response);
+			evt.sender.send('item-add-failure');
+		};
+
+		if(pointer.parent.adminIsLoggedIn()){
+
+			pointer.parent.dbm.addItem(data, true, _success, _failure);
+		} else 
+			process.stdout.write('unauthorized add item attempt');
+
+
 	});
 
 });
