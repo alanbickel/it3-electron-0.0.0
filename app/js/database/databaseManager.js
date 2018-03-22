@@ -31,7 +31,8 @@ var DatabaseManager = function(){
 	*/
 	this.addItem = (record, encoded, successCallback, failureCallback) =>{
 
-		console.log('preparing to add: ', record);
+		console.log('preparing to add: ', record, encoded);
+		this.collection('items').insert(record, encoded, successCallback, failureCallback);
 
 	};
 };

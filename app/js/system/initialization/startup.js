@@ -26,7 +26,7 @@ var StartupRoutine = function(parent){
     //configure document constraint for items database
     var success = function(){process.stdout.write('\ncollection: items, constraint:  {label: unique} -> success\n')};
 		var failure = function(){self.parent.dbInitializeFailure};
-		var constraint = {fieldName: 'label', unique: true};
+		var constraint = {fieldName: 'item_name', unique: true};
 		
 	  parent.dbm.collection('items').ensureIndex(constraint,success, failure);
 

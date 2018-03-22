@@ -44,8 +44,8 @@ $(document).ready(function(){
 
 		if(inputIsNotEmpty('item-name') && selectIsNotDefault('item-category')){
 			var _payload = {
-				itemName: itemName,
-				itemCategory: category
+				item_name: itemName,
+				category: category
 			}
 
 			ipcRenderer.send('create-item', _payload);
@@ -55,7 +55,7 @@ $(document).ready(function(){
 
 
 /**response from main, successfully added item */
-ipcModule.on('item-added', function(evt, data){
+ipcRenderer.on('item-added', function(evt, data){
 	//feedback for user
 	$("#confirmation-message").css({opacity: 1});
 	setTimeout(function(){
