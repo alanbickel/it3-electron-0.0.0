@@ -73,12 +73,13 @@ var ModalListener = (function(parent, ipcModule){
 		//request to send fresh item list to modal
 		var _success = ()=>{
 			pointer.parent.modalDataRequest({ requestType: 'request-items'});
+			console.log('modal listener success callback');
 			evt.sender.send('item-added');
 		}
 
 		var _failure = (response)=> {
-			console.log('add item failure', response);
-			evt.sender.send('item-add-failure');
+			console.log('add item failure', response.errorType);
+			evt.sender.send('item-add-failure', response.errorType);
 		};
 
 		if(pointer.parent.adminIsLoggedIn()){

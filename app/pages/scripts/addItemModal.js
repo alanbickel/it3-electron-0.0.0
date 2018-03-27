@@ -26,7 +26,6 @@ ipcRenderer.on('modal-data-request-response', function(evt, data){
 });
 
 
-
 var submitBtn = document.getElementById('add-item-submit');
 var cancelBtn = document.getElementById('add-item-cancel');
 
@@ -56,10 +55,28 @@ $(document).ready(function(){
 
 /**response from main, successfully added item */
 ipcRenderer.on('item-added', function(evt, data){
+
+	console.log('ITEM ADDED');
 	//feedback for user
 	$("#confirmation-message").css({opacity: 1});
 	setTimeout(function(){
 		$("#confirmation-message").css({opacity: 0});
+	}, 3000);
+});
+
+
+ipcRenderer.on('item-add-failure', function(evt, errorType){
+
+	var errString = "";
+	if(errorType == "uniqueViolated")
+		errString = "Item exists."; 
+	console.log('ITEM NOT ADDED');
+
+	$(".duplicateWarning").text(errString);
+	
+	$(".duplicateWarning").css({opacity: 1});
+	setTimeout(function(){
+		$(".duplicateWarning").css({opacity: 0});
 	}, 3000);
 });
 
